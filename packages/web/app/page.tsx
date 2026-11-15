@@ -1,0 +1,215 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import type { DesignDNA } from "@baroxy/core";
+
+interface GenerateResult {
+  dna: DesignDNA;
+  markdown: string;
+  css: string;
+  tailwind: string;
+}
+
+function download(filename: string, content: string) {
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export default function HomePage() {
+  const [name, setName] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [audience, setAudience] = useState("");
+  const [mood, setMood] = useState("");
+  const [references, setReferences] = useState("");
+  const [result, setResult] = useState<GenerateResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, industry, audience, mood, references }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const data: GenerateResult = await res.json();
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <main className="shell">
+      <header className="hero">
+        <p className="kicker">baroxy</p>
+        <h1>Stop your AI-coded app from looking like everyone else&apos;s.</h1>
+        <p className="sub">
+          Describe the project once. Get a locked typography, color, spacing, and motion identity — plus the
+          exact &quot;AI tells&quot; to avoid — that any coding agent can follow.
+        </p>
+      </header>
+
+      <form className="brief-form" onSubmit={handleSubmit}>
+        <label>
+          Project name
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Acme" required />
+        </label>
+        <label>
+          Industry / category
+          <input
+            value={industry}
+            onChange={(e) => setIndustry(e.target.value)}
+            placeholder="fintech, dev tools, skincare..."
+            required
+          />
+        </label>
+        <label>
+          Target audience
+          <input
+            value={audience}
+            onChange={(e) => setAudience(e.target.value)}
+            placeholder="solo founders, enterprise IT teams..."
+            required
+          />
+        </label>
+        <label>
+          Mood (comma-separated)
+          <input value={mood} onChange={(e) => setMood(e.target.value)} placeholder="bold, energetic" />
+        </label>
+        <label>
+          References (comma-separated, optional)
+          <input value={references} onChange={(e) => setReferences(e.target.value)} placeholder="Linear, Notion" />
+        </label>
+        <button type="submit" disabled={loading}>
+          {loading ? "Generating..." : "Generate Design DNA"}
+        </button>
+        {error && <p className="error">{error}</p>}
+      </form>
+
+      {result && <DnaPreview result={result} />}
+    </main>
+  );
+}
+
+function DnaPreview({ result }: { result: GenerateResult }) {
+  const { dna } = result;
+  const fontLinks = Array.from(
+    new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl])
+  );
+  const semanticKeys = ["primary", "secondary", "accent", "success", "warning", "danger"] as const;
+
+  return (
+    <section className="preview">
+      {fontLinks.map((href) => (
+        <link rel="stylesheet" href={href} key={href} />
+      ))}
+
+      <h2>Design DNA — seed {dna.seed}</h2>
+
+      <div className="block">
+        <h3>Typography — {dna.typography.name}</h3>
+        <p
+          style={{
+            fontFamily: `"${dna.typography.heading.family}", sans-serif`,
+            fontSize: "2rem",
+            fontWeight: dna.typography.heading.weights[dna.typography.heading.weights.length - 1],
+            margin: "0 0 8px",
+          }}
+        >
+          {dna.brief.name || "Your heading, in this font"}
+        </p>
+        <p style={{ fontFamily: `"${dna.typography.body.family}", sans-serif`, margin: 0 }}>
+          Body text set in {dna.typography.body.family}. {dna.typography.personality}.
+        </p>
+      </div>
+
+      <div className="block">
+        <h3>Colors — {dna.colors.harmony}</h3>
+        <div className="swatches">
+          {semanticKeys.map((key) => (
+            <div key={key} className="swatch">
+              <div className="swatch-color" style={{ background: dna.colors[key] }} />
+              <span>{key}</span>
+              <code>{dna.colors[key]}</code>
+            </div>
+          ))}
+        </div>
+        <div className="neutral-row">
+          {dna.colors.neutral.map((c, i) => (
+            <div key={i} className="neutral-chip" style={{ background: c }} title={c} />
+          ))}
+        </div>
+      </div>
+
+      <div className="block">
+        <h3>Spacing & radius — {dna.spacing.name}</h3>
+        <div className="scale-row">
+          {dna.spacing.scale.map((v, i) => (
+            <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
+          ))}
+        </div>
+      </div>
+
+      <div className="block">
+        <h3>Motion — {dna.motion.name}</h3>
+        <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
+      </div>
+
+      <div className="block">
+        <h3>Signature details (mandatory)</h3>
+        <ul>
+          {dna.signatureDetails.map((d) => (
+            <li key={d}>{d}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="block">
+        <h3>Forbidden</h3>
+        <ul>
+          {dna.forbidden.map((f) => (
+            <li key={f}>{f}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="downloads">
+        <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>Download STYLE_CONTRACT.md</button>
+        <button onClick={() => download("tokens.css", result.css)}>Download tokens.css</button>
+        <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>Download tailwind.tokens.js</button>
+        <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
+          Download design-dna.json
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function MotionDemo({ easing, duration, accent }: { easing: string; duration: string; accent: string }) {
+  const [moved, setMoved] = useState(false);
+  return (
+    <button
+      className="motion-demo"
+      onClick={() => setMoved((m) => !m)}
+      style={{
+        transform: moved ? "translateX(140px)" : "translateX(0)",
+        transition: `transform ${duration} ${easing}`,
+        background: accent,
+      }}
+    >
+      click me
+    </button>
+  );
+}
