@@ -1,0 +1,22 @@
+{
+  "name": "@baroxy/cli",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CLI for generating a Baroxy Design DNA and writing it into your project.",
+  "type": "module",
+  "bin": {
+    "baroxy": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@baroxy/core": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.2"
+  }
+}

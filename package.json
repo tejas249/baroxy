@@ -1,0 +1,16 @@
+{
+  "name": "baroxy",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Baroxy generates a unique, deterministic design identity for AI-coded projects, so they stop defaulting to the same generic look.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @baroxy/core && npm run build -w @baroxy/cli && npm run build -w @baroxy/mcp-server",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
