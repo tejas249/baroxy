@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
 import { ShareLink } from "../components/ShareLink";
 
@@ -28,6 +29,7 @@ export default function GeneratePage() {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
+  const [listPublicly, setListPublicly] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,6 +46,7 @@ export default function GeneratePage() {
       if (!res.ok) throw new Error(await readError(res));
       const data: GenerateResult = await res.json();
       setResult(data);
+      track("generate", { industry, typography: data.dna.typography.name });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -58,11 +61,12 @@ export default function GeneratePage() {
       const res = await fetch("/api/share", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, industry, audience, mood, references }),
+        body: JSON.stringify({ name, industry, audience, mood, references, public: listPublicly }),
       });
       if (!res.ok) throw new Error(await readError(res));
       const { id } = await res.json();
       setShareUrl(`${window.location.origin}/d/${id}`);
+      track("share", { public: listPublicly });
     } catch (err) {
       setShareError(err instanceof Error ? err.message : "Could not create a share link");
     } finally {
@@ -122,9 +126,15 @@ export default function GeneratePage() {
         <DnaPreview result={result}>
           <div className="share-block">
             {!shareUrl && (
-              <button type="button" onClick={handleShare} disabled={sharing}>
-                {sharing ? "Creating link..." : "Save & get shareable link"}
-              </button>
+              <>
+                <label className="checkbox-label">
+                  <input type="checkbox" checked={listPublicly} onChange={(e) => setListPublicly(e.target.checked)} />
+                  List this publicly in the <a href="/showcase">showcase</a>
+                </label>
+                <button type="button" onClick={handleShare} disabled={sharing}>
+                  {sharing ? "Creating link..." : "Save & get shareable link"}
+                </button>
+              </>
             )}
             {shareUrl && <ShareLink url={shareUrl} />}
             {shareError && <p className="error">{shareError}</p>}

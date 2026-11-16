@@ -2,17 +2,12 @@ import { NextResponse } from "next/server";
 import { generateDesignDNA, toStyleContractMarkdown, toCSSVariables, toTailwindTokens } from "@baroxy/core";
 import { generateShareId, saveShare } from "../../../lib/share";
 import { checkRateLimit, clientKey } from "../../../lib/rateLimit";
+import { parseBrief } from "../../../lib/brief";
+import { validateBrief } from "../../../lib/moderation";
 
 // Lower than /api/generate since every call here also writes to blob storage.
 const LIMIT = 10;
 const WINDOW_MS = 60_000;
-
-function splitList(value: unknown): string[] {
-  return String(value ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 export async function POST(request: Request) {
   const rate = checkRateLimit(`share:${clientKey(request)}`, LIMIT, WINDOW_MS);
@@ -24,17 +19,16 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json().catch(() => ({}));
+  const brief = parseBrief(body);
 
-  const brief = {
-    name: String(body.name || "Untitled Project"),
-    industry: String(body.industry || "general"),
-    audience: String(body.audience || "general users"),
-    mood: splitList(body.mood),
-    references: splitList(body.references),
-  };
+  const validationError = validateBrief(brief);
+  if (validationError) {
+    return NextResponse.json({ error: validationError }, { status: 400 });
+  }
 
   const dna = generateDesignDNA(brief);
   const id = generateShareId();
+  const isPublic = body.public === true;
 
   await saveShare({
     id,
@@ -43,6 +37,7 @@ export async function POST(request: Request) {
     css: toCSSVariables(dna),
     tailwind: toTailwindTokens(dna),
     createdAt: new Date().toISOString(),
+    public: isPublic,
   });
 
   return NextResponse.json({ id });

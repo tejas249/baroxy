@@ -603,6 +603,18 @@ ul {
   gap: 10px;
 }
 
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.checkbox-label a {
+  color: var(--accent);
+}
+
 .share-block > button {
   background: var(--accent);
   color: var(--accent-ink);
@@ -635,6 +647,50 @@ ul {
   padding: 10px 12px;
   font-family: var(--font-mono);
   font-size: 0.85rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.gallery-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 16px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.gallery-card:hover {
+  border-color: var(--accent);
+}
+
+.gallery-swatches {
+  display: flex;
+  gap: 4px;
+  height: 32px;
+  margin-bottom: 12px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.gallery-swatches span {
+  flex: 1;
+}
+
+.gallery-card h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.gallery-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
 }
 
 .share-link button {
