@@ -80,8 +80,8 @@ export default function HomePage() {
             </a>
           </div>
           <p className="hero-stats">
-            12 typography pairings · 4 color harmonies · 5 motion systems · 20 signature details · 10 banned
-            patterns
+            34 typography pairings · a continuous color system · 8 motion systems · 30 signature details · 10
+            banned patterns
           </p>
         </div>
       </section>
