@@ -1,215 +1,180 @@
-"use client";
+import Link from "next/link";
 
-import { useState, type FormEvent } from "react";
-import type { DesignDNA } from "@baroxy/core";
+const TELLS = [
+  "Inter, Roboto, Open Sans, or Poppins as the heading font",
+  "A blue-to-indigo-to-violet gradient behind the hero headline",
+  "Unmodified shadcn/ui default radius, shadow, and color tokens",
+  "Every corner rounded to exactly 12px, everywhere, forever",
+  "Hero copy that says 'Unlock the power of' or 'Supercharge your workflow'",
+  "A single centered column with a gradient blob behind every section",
+];
 
-interface GenerateResult {
-  dna: DesignDNA;
-  markdown: string;
-  css: string;
-  tailwind: string;
-}
+const STEPS = [
+  {
+    n: "01",
+    title: "Describe your project",
+    body: "Name, industry, audience, mood, references. Thirty seconds of input, no sign-up.",
+  },
+  {
+    n: "02",
+    title: "Get a locked Design DNA",
+    body: "Typography pairing, color harmony, spacing scale, motion system, and mandatory signature details — plus a fixed list of AI tells it's not allowed to use.",
+  },
+  {
+    n: "03",
+    title: "Hand it to your agent",
+    body: "Paste the style contract into Claude Code, Cursor, or any coding agent — or wire it in directly with the Baroxy MCP server so every screen follows the same rules automatically.",
+  },
+  {
+    n: "04",
+    title: "Ship something that looks like yours",
+    body: "The same brief always reproduces the same DNA. Different briefs produce different ones. Nothing is random per request.",
+  },
+];
 
-function download(filename: string, content: string) {
-  const blob = new Blob([content], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+const FAQS = [
+  {
+    q: "Is the output actually deterministic, or just randomized to look custom?",
+    a: "Deterministic. Your brief is hashed and used to seed the generator, so the exact same inputs always reproduce the exact same typography, colors, spacing, and motion. Change the brief and you get a different — but still reproducible — result.",
+  },
+  {
+    q: "What do I actually get?",
+    a: "A style contract (Markdown), a tokens.css file, a tailwind.tokens.js file, and a raw design-dna.json — plus a fixed list of signature details your UI must include and anti-patterns it must avoid.",
+  },
+  {
+    q: "How do I use this with Claude Code, Cursor, or another agent?",
+    a: "Paste the generated STYLE_CONTRACT.md into your agent's context before it starts building, or run the Baroxy MCP server locally so your agent can call generate_design_dna and get_style_contract directly as tools.",
+  },
+  {
+    q: "Is this free?",
+    a: "Yes. The web generator, CLI, and MCP server are all free to use.",
+  },
+  {
+    q: "Does it lock me into Tailwind, or a specific framework?",
+    a: "No. You get plain CSS variables, a Tailwind token file, and a framework-agnostic style contract. Use whichever one fits your stack.",
+  },
+  {
+    q: "Why would a tool meant to fight generic AI output risk looking generic itself?",
+    a: "Fair question — it's why this site doesn't ship the default shadcn card grid you'll see below in the 'what to avoid' list. If Baroxy ever looks like every other AI-generated landing page, that's a bug, not a vibe.",
+  },
+];
 
 export default function HomePage() {
-  const [name, setName] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [audience, setAudience] = useState("");
-  const [mood, setMood] = useState("");
-  const [references, setReferences] = useState("");
-  const [result, setResult] = useState<GenerateResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, industry, audience, mood, references }),
-      });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
-      const data: GenerateResult = await res.json();
-      setResult(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
-    <main className="shell">
-      <header className="hero">
-        <p className="kicker">baroxy</p>
-        <h1>Stop your AI-coded app from looking like everyone else&apos;s.</h1>
-        <p className="sub">
-          Describe the project once. Get a locked typography, color, spacing, and motion identity — plus the
-          exact &quot;AI tells&quot; to avoid — that any coding agent can follow.
-        </p>
-      </header>
+    <main>
+      <section className="marketing-hero">
+        <div className="shell-wide">
+          <p className="kicker">Design DNA generator for AI-coded apps</p>
+          <h1>Stop your AI-coded app from looking like everyone else&apos;s.</h1>
+          <p className="sub">
+            Every vibe-coded app is starting to look identical — same font, same gradient, same layout. Baroxy
+            generates a locked, deterministic design identity from a 30-second brief, so your coding agent has
+            exact rules to follow instead of its defaults.
+          </p>
+          <div className="hero-actions">
+            <Link href="/generate" className="cta-button">
+              Generate your Design DNA
+            </Link>
+            <a href="#how-it-works" className="cta-button cta-button--ghost">
+              See how it works
+            </a>
+          </div>
+          <p className="hero-stats">
+            12 typography pairings · 4 color harmonies · 5 motion systems · 20 signature details · 10 banned
+            patterns
+          </p>
+        </div>
+      </section>
 
-      <form className="brief-form" onSubmit={handleSubmit}>
-        <label>
-          Project name
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Acme" required />
-        </label>
-        <label>
-          Industry / category
-          <input
-            value={industry}
-            onChange={(e) => setIndustry(e.target.value)}
-            placeholder="fintech, dev tools, skincare..."
-            required
-          />
-        </label>
-        <label>
-          Target audience
-          <input
-            value={audience}
-            onChange={(e) => setAudience(e.target.value)}
-            placeholder="solo founders, enterprise IT teams..."
-            required
-          />
-        </label>
-        <label>
-          Mood (comma-separated)
-          <input value={mood} onChange={(e) => setMood(e.target.value)} placeholder="bold, energetic" />
-        </label>
-        <label>
-          References (comma-separated, optional)
-          <input value={references} onChange={(e) => setReferences(e.target.value)} placeholder="Linear, Notion" />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? "Generating..." : "Generate Design DNA"}
-        </button>
-        {error && <p className="error">{error}</p>}
-      </form>
+      <section className="section" id="problem">
+        <div className="shell-wide">
+          <p className="section-kicker">The problem</p>
+          <h2>Every AI-coded app looks the same.</h2>
+          <p className="section-sub">
+            Ask any coding agent to build a landing page or a dashboard and it reaches for the same defaults —
+            because those defaults are the median of its training data, not a design decision. Baroxy exists so
+            your project isn&apos;t the median.
+          </p>
+          <ul className="tell-list">
+            {TELLS.map((t) => (
+              <li key={t}>
+                <span className="tell-mark">✕</span>
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-      {result && <DnaPreview result={result} />}
-    </main>
-  );
-}
+      <section className="section" id="how-it-works">
+        <div className="shell-wide">
+          <p className="section-kicker">How it works</p>
+          <h2>Four steps, no design background required.</h2>
+          <div className="steps">
+            {STEPS.map((s) => (
+              <div className="step" key={s.n}>
+                <p className="step-n">{s.n}</p>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-function DnaPreview({ result }: { result: GenerateResult }) {
-  const { dna } = result;
-  const fontLinks = Array.from(
-    new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl])
-  );
-  const semanticKeys = ["primary", "secondary", "accent", "success", "warning", "danger"] as const;
-
-  return (
-    <section className="preview">
-      {fontLinks.map((href) => (
-        <link rel="stylesheet" href={href} key={href} />
-      ))}
-
-      <h2>Design DNA — seed {dna.seed}</h2>
-
-      <div className="block">
-        <h3>Typography — {dna.typography.name}</h3>
-        <p
-          style={{
-            fontFamily: `"${dna.typography.heading.family}", sans-serif`,
-            fontSize: "2rem",
-            fontWeight: dna.typography.heading.weights[dna.typography.heading.weights.length - 1],
-            margin: "0 0 8px",
-          }}
-        >
-          {dna.brief.name || "Your heading, in this font"}
-        </p>
-        <p style={{ fontFamily: `"${dna.typography.body.family}", sans-serif`, margin: 0 }}>
-          Body text set in {dna.typography.body.family}. {dna.typography.personality}.
-        </p>
-      </div>
-
-      <div className="block">
-        <h3>Colors — {dna.colors.harmony}</h3>
-        <div className="swatches">
-          {semanticKeys.map((key) => (
-            <div key={key} className="swatch">
-              <div className="swatch-color" style={{ background: dna.colors[key] }} />
-              <span>{key}</span>
-              <code>{dna.colors[key]}</code>
+      <section className="section" id="product">
+        <div className="shell-wide">
+          <p className="section-kicker">The product</p>
+          <h2>One Design DNA, three ways to use it.</h2>
+          <div className="product-grid">
+            <div className="product-row">
+              <code>npx @baroxy/cli --name Acme --industry fintech --mood trustworthy</code>
+              <p>
+                <strong>CLI.</strong> Run it from your terminal or a script. Writes STYLE_CONTRACT.md, tokens.css,
+                tailwind.tokens.js, and design-dna.json straight into your repo.
+              </p>
             </div>
-          ))}
+            <div className="product-row">
+              <code>claude mcp add baroxy -- npx @baroxy/mcp-server</code>
+              <p>
+                <strong>MCP server.</strong> Exposes generate_design_dna and get_style_contract as tools, so
+                Claude Code, Cursor, or any MCP-compatible agent can pull your Design DNA mid-conversation.
+              </p>
+            </div>
+            <div className="product-row">
+              <Link href="/generate">baroxy.vercel.app/generate</Link>
+              <p>
+                <strong>Web generator.</strong> No install. Fill in a brief, preview the result live, and download
+                the same files the CLI produces.
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="neutral-row">
-          {dna.colors.neutral.map((c, i) => (
-            <div key={i} className="neutral-chip" style={{ background: c }} title={c} />
-          ))}
+      </section>
+
+      <section className="section" id="faq">
+        <div className="shell-wide">
+          <p className="section-kicker">FAQ</p>
+          <h2>Questions worth asking before you install anything.</h2>
+          <div className="faq-list">
+            {FAQS.map((f) => (
+              <details className="faq-item" key={f.q}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="block">
-        <h3>Spacing & radius — {dna.spacing.name}</h3>
-        <div className="scale-row">
-          {dna.spacing.scale.map((v, i) => (
-            <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
-          ))}
+      <section className="section final-cta">
+        <div className="shell-wide">
+          <h2>Ready to stop looking generic?</h2>
+          <Link href="/generate" className="cta-button">
+            Generate your Design DNA
+          </Link>
         </div>
-      </div>
-
-      <div className="block">
-        <h3>Motion — {dna.motion.name}</h3>
-        <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
-      </div>
-
-      <div className="block">
-        <h3>Signature details (mandatory)</h3>
-        <ul>
-          {dna.signatureDetails.map((d) => (
-            <li key={d}>{d}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="block">
-        <h3>Forbidden</h3>
-        <ul>
-          {dna.forbidden.map((f) => (
-            <li key={f}>{f}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="downloads">
-        <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>Download STYLE_CONTRACT.md</button>
-        <button onClick={() => download("tokens.css", result.css)}>Download tokens.css</button>
-        <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>Download tailwind.tokens.js</button>
-        <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
-          Download design-dna.json
-        </button>
-      </div>
-    </section>
-  );
-}
-
-function MotionDemo({ easing, duration, accent }: { easing: string; duration: string; accent: string }) {
-  const [moved, setMoved] = useState(false);
-  return (
-    <button
-      className="motion-demo"
-      onClick={() => setMoved((m) => !m)}
-      style={{
-        transform: moved ? "translateX(140px)" : "translateX(0)",
-        transition: `transform ${duration} ${easing}`,
-        background: accent,
-      }}
-    >
-      click me
-    </button>
+      </section>
+    </main>
   );
 }
