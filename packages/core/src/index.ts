@@ -1,4 +1,5 @@
 export * from "./types.js";
+export * from "./version.js";
 export * from "./hash.js";
 export * from "./fonts.js";
 export * from "./colors.js";

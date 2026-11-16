@@ -5,6 +5,7 @@ import { pickSpacingSystem } from "./spacing.js";
 import { pickMotionSystem } from "./motion.js";
 import { SIGNATURE_DETAILS } from "./signatureDetails.js";
 import { ANTI_PATTERNS } from "./antiPatterns.js";
+import { CORE_VERSION } from "./version.js";
 import type { DesignBrief, DesignDNA } from "./types.js";
 
 function briefKey(brief: DesignBrief): string {
@@ -30,6 +31,7 @@ export function generateDesignDNA(brief: DesignBrief): DesignDNA {
   return {
     brief,
     seed,
+    coreVersion: CORE_VERSION,
     typography,
     colors,
     spacing,
