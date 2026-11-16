@@ -19,6 +19,7 @@ export default function SiteHeader() {
         <nav className="site-nav">
           <Link href="/#problem">Product</Link>
           <Link href="/#how-it-works">How it works</Link>
+          <Link href="/showcase">Showcase</Link>
           <Link href="/#faq">FAQ</Link>
           <Link href="/#contact">Contact</Link>
         </nav>
