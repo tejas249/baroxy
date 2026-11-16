@@ -25,7 +25,7 @@ export function generateDesignDNA(brief: DesignBrief): DesignDNA {
   const colors = generateColorSystem(rng, brief.mood);
   const spacing = pickSpacingSystem(rng);
   const motion = pickMotionSystem(rng, brief.mood);
-  const signatureDetails = pickMany(rng, SIGNATURE_DETAILS, 4);
+  const signatureDetails = pickMany(rng, SIGNATURE_DETAILS, 5);
 
   return {
     brief,

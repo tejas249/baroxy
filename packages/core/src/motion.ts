@@ -6,6 +6,9 @@ export const MOTION_SYSTEMS: readonly MotionSystem[] = [
   { name: "Deliberate", easing: "cubic-bezier(0.65, 0, 0.35, 1)", durations: { fast: "220ms", base: "400ms", slow: "600ms" } },
   { name: "Bouncy", easing: "cubic-bezier(0.34, 1.56, 0.64, 1)", durations: { fast: "180ms", base: "320ms", slow: "480ms" } },
   { name: "Minimal", easing: "linear", durations: { fast: "60ms", base: "100ms", slow: "140ms" } },
+  { name: "Elastic", easing: "cubic-bezier(0.68, -0.55, 0.27, 1.55)", durations: { fast: "200ms", base: "380ms", slow: "560ms" } },
+  { name: "Crisp", easing: "cubic-bezier(0.16, 1, 0.3, 1)", durations: { fast: "100ms", base: "180ms", slow: "260ms" } },
+  { name: "Weighted", easing: "cubic-bezier(0.83, 0, 0.17, 1)", durations: { fast: "260ms", base: "450ms", slow: "650ms" } },
 ];
 
 const MOTION_BY_MOOD: Record<string, string> = {
