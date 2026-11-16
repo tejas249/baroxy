@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { track } from "@vercel/analytics";
+import { Sparkles, Link2 } from "lucide-react";
 import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
 import { ShareLink } from "../components/ShareLink";
 
@@ -117,6 +118,7 @@ export default function GeneratePage() {
           <input value={references} onChange={(e) => setReferences(e.target.value)} placeholder="Linear, Notion" />
         </label>
         <button type="submit" disabled={loading}>
+          <Sparkles size={15} strokeWidth={2} />
           {loading ? "Generating..." : "Generate Design DNA"}
         </button>
         {error && <p className="error">{error}</p>}
@@ -132,6 +134,7 @@ export default function GeneratePage() {
                   List this publicly in the <a href="/showcase">showcase</a>
                 </label>
                 <button type="button" onClick={handleShare} disabled={sharing}>
+                  <Link2 size={15} strokeWidth={2} />
                   {sharing ? "Creating link..." : "Save & get shareable link"}
                 </button>
               </>
