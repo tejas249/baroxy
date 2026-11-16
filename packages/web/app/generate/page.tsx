@@ -4,6 +4,17 @@ import { useState, type FormEvent } from "react";
 import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
 import { ShareLink } from "../components/ShareLink";
 
+async function readError(res: Response): Promise<string> {
+  if (res.status === 429) {
+    const retryAfter = res.headers.get("Retry-After");
+    return retryAfter
+      ? `You're generating too fast — try again in ${retryAfter}s.`
+      : "You're generating too fast — slow down and try again shortly.";
+  }
+  const data = await res.json().catch(() => null);
+  return data?.error || `Request failed (${res.status})`;
+}
+
 export default function GeneratePage() {
   const [name, setName] = useState("");
   const [industry, setIndustry] = useState("");
@@ -30,7 +41,7 @@ export default function GeneratePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, industry, audience, mood, references }),
       });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      if (!res.ok) throw new Error(await readError(res));
       const data: GenerateResult = await res.json();
       setResult(data);
     } catch (err) {
@@ -49,7 +60,7 @@ export default function GeneratePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, industry, audience, mood, references }),
       });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      if (!res.ok) throw new Error(await readError(res));
       const { id } = await res.json();
       setShareUrl(`${window.location.origin}/d/${id}`);
     } catch (err) {
