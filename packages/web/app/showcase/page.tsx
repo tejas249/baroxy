@@ -2,9 +2,27 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { listGallery } from "../../lib/share";
 
+const TITLE = "Showcase";
+const DESCRIPTION = "Design DNAs the community has chosen to share publicly — real briefs, real variety.";
+
 export const metadata: Metadata = {
-  title: "Showcase — Baroxy",
-  description: "Design DNAs the community has chosen to share publicly — real briefs, real variety.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/showcase" },
+  openGraph: {
+    type: "website",
+    url: "/showcase",
+    siteName: "Baroxy",
+    locale: "en_US",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/opengraph-image"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export const revalidate = 60;

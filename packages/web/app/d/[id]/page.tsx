@@ -10,10 +10,28 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const record = await loadShare(id);
-  if (!record) return { title: "Design DNA not found — Baroxy" };
+  if (!record) return { title: "Design DNA not found" };
+
+  const title = `${record.dna.brief.name} — Design DNA`;
+  const description = `A locked Design DNA generated for "${record.dna.brief.name}": ${record.dna.typography.name} typography, ${record.dna.colors.harmony} color system, ${record.dna.spacing.name} spacing.`;
+
   return {
-    title: `${record.dna.brief.name} — Design DNA — Baroxy`,
-    description: `A locked Design DNA generated for "${record.dna.brief.name}": ${record.dna.typography.name} typography, ${record.dna.colors.harmony} color system, ${record.dna.spacing.name} spacing.`,
+    title,
+    description,
+    alternates: { canonical: `/d/${id}` },
+    openGraph: {
+      type: "website",
+      url: `/d/${id}`,
+      siteName: "Baroxy",
+      locale: "en_US",
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

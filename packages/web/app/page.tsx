@@ -59,9 +59,26 @@ const FAQS = [
   },
 ];
 
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Baroxy",
+  url: "https://baroxy.vercel.app",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Any",
+  description:
+    "Generates a locked, deterministic design identity (typography, color, spacing, motion, signature details, and banned AI tells) from a short brief, for AI coding agents to follow.",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+};
+
 export default function HomePage() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <section className="marketing-hero">
         <div className="shell-wide">
           <p className="kicker">Design DNA generator for AI-coded apps</p>
