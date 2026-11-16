@@ -1,11 +1,22 @@
 {
   "name": "@baroxy/core",
-  "private": true,
   "version": "0.1.0",
   "description": "Deterministic design-identity generation engine for Baroxy.",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejas249/baroxy.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://baroxy.vercel.app",
+  "bugs": "https://github.com/tejas249/baroxy/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
