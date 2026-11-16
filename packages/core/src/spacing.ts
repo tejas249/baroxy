@@ -6,6 +6,10 @@ export const SPACING_SYSTEMS: readonly SpacingSystem[] = [
   { name: "Boxy & Confident", scale: [0.5, 0.75, 1.25, 2, 3, 4.5, 6, 8], radius: { sm: "0px", md: "0px", lg: "2px", full: "2px" } },
   { name: "Round & Friendly", scale: [0.5, 1, 1.5, 2, 3, 4, 6, 9], radius: { sm: "12px", md: "20px", lg: "32px", full: "9999px" } },
   { name: "Tight & Technical", scale: [0.25, 0.5, 1, 1.5, 2, 2.5, 3, 4], radius: { sm: "3px", md: "6px", lg: "8px", full: "9999px" } },
+  { name: "Generous & Editorial", scale: [0.5, 1, 2, 3, 5, 7, 10, 14], radius: { sm: "1px", md: "2px", lg: "4px", full: "9999px" } },
+  { name: "Compact & Dense", scale: [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 3], radius: { sm: "4px", md: "8px", lg: "12px", full: "9999px" } },
+  { name: "Asymmetric Notch", scale: [0.5, 1, 1.5, 2, 3, 4, 6, 8], radius: { sm: "0px", md: "16px 4px", lg: "24px 4px", full: "9999px" } },
+  { name: "Pillowy", scale: [0.75, 1.5, 2.25, 3, 4.5, 6, 9, 12], radius: { sm: "16px", md: "24px", lg: "36px", full: "9999px" } },
 ];
 
 export function pickSpacingSystem(rng: () => number): SpacingSystem {
