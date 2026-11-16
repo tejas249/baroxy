@@ -45,6 +45,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
             fontSize: "2rem",
             fontWeight: dna.typography.heading.weights[dna.typography.heading.weights.length - 1],
             margin: "0 0 8px",
+            overflowWrap: "anywhere",
           }}
         >
           {dna.brief.name || "Your heading, in this font"}
