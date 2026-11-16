@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { Type, Palette, Ruler, Zap, CheckSquare, Ban, Download } from "lucide-react";
 import type { DesignDNA } from "@baroxy/core";
 
 export interface GenerateResult {
@@ -18,6 +19,15 @@ export function download(filename: string, content: string) {
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function BlockTitle({ icon: Icon, children }: { icon: typeof Type; children: ReactNode }) {
+  return (
+    <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <Icon size={17} strokeWidth={2} style={{ color: "var(--text-dim)", flexShrink: 0 }} />
+      {children}
+    </h3>
+  );
 }
 
 export function DnaPreview({ result, children }: { result: GenerateResult; children?: ReactNode }) {
@@ -38,7 +48,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </h2>
 
       <div className="block">
-        <h3>Typography — {dna.typography.name}</h3>
+        <BlockTitle icon={Type}>Typography — {dna.typography.name}</BlockTitle>
         <p
           style={{
             fontFamily: `"${dna.typography.heading.family}", sans-serif`,
@@ -56,7 +66,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <h3>Colors — {dna.colors.harmony}</h3>
+        <BlockTitle icon={Palette}>Colors — {dna.colors.harmony}</BlockTitle>
         <div className="swatches">
           {semanticKeys.map((key) => (
             <div key={key} className="swatch">
@@ -74,7 +84,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <h3>Spacing & radius — {dna.spacing.name}</h3>
+        <BlockTitle icon={Ruler}>Spacing & radius — {dna.spacing.name}</BlockTitle>
         <div className="scale-row">
           {dna.spacing.scale.map((v, i) => (
             <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
@@ -83,12 +93,12 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <h3>Motion — {dna.motion.name}</h3>
+        <BlockTitle icon={Zap}>Motion — {dna.motion.name}</BlockTitle>
         <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
       </div>
 
       <div className="block">
-        <h3>Signature details (mandatory)</h3>
+        <BlockTitle icon={CheckSquare}>Signature details (mandatory)</BlockTitle>
         <ul>
           {dna.signatureDetails.map((d) => (
             <li key={d}>{d}</li>
@@ -97,7 +107,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <h3>Forbidden</h3>
+        <BlockTitle icon={Ban}>Forbidden</BlockTitle>
         <ul>
           {dna.forbidden.map((f) => (
             <li key={f}>{f}</li>
@@ -106,11 +116,17 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="downloads">
-        <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>Download STYLE_CONTRACT.md</button>
-        <button onClick={() => download("tokens.css", result.css)}>Download tokens.css</button>
-        <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>Download tailwind.tokens.js</button>
+        <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>
+          <Download size={15} strokeWidth={2} /> STYLE_CONTRACT.md
+        </button>
+        <button onClick={() => download("tokens.css", result.css)}>
+          <Download size={15} strokeWidth={2} /> tokens.css
+        </button>
+        <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>
+          <Download size={15} strokeWidth={2} /> tailwind.tokens.js
+        </button>
         <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
-          Download design-dna.json
+          <Download size={15} strokeWidth={2} /> design-dna.json
         </button>
       </div>
 
