@@ -5,3 +5,5 @@ dist/
 .DS_Store
 design-dna/
 .env
+.env*.local
+*.tsbuildinfo

@@ -1,24 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import type { DesignDNA } from "@baroxy/core";
-
-interface GenerateResult {
-  dna: DesignDNA;
-  markdown: string;
-  css: string;
-  tailwind: string;
-}
-
-function download(filename: string, content: string) {
-  const blob = new Blob([content], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
+import { ShareLink } from "../components/ShareLink";
 
 export default function GeneratePage() {
   const [name, setName] = useState("");
@@ -30,10 +14,16 @@ export default function GeneratePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setShareUrl(null);
+    setShareError(null);
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
@@ -47,6 +37,25 @@ export default function GeneratePage() {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleShare() {
+    setSharing(true);
+    setShareError(null);
+    try {
+      const res = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, industry, audience, mood, references }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const { id } = await res.json();
+      setShareUrl(`${window.location.origin}/d/${id}`);
+    } catch (err) {
+      setShareError(err instanceof Error ? err.message : "Could not create a share link");
+    } finally {
+      setSharing(false);
     }
   }
 
@@ -98,118 +107,19 @@ export default function GeneratePage() {
         {error && <p className="error">{error}</p>}
       </form>
 
-      {result && <DnaPreview result={result} />}
+      {result && (
+        <DnaPreview result={result}>
+          <div className="share-block">
+            {!shareUrl && (
+              <button type="button" onClick={handleShare} disabled={sharing}>
+                {sharing ? "Creating link..." : "Save & get shareable link"}
+              </button>
+            )}
+            {shareUrl && <ShareLink url={shareUrl} />}
+            {shareError && <p className="error">{shareError}</p>}
+          </div>
+        </DnaPreview>
+      )}
     </main>
-  );
-}
-
-function DnaPreview({ result }: { result: GenerateResult }) {
-  const { dna } = result;
-  const fontLinks = Array.from(
-    new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl])
-  );
-  const semanticKeys = ["primary", "secondary", "accent", "success", "warning", "danger"] as const;
-
-  return (
-    <section className="preview">
-      {fontLinks.map((href) => (
-        <link rel="stylesheet" href={href} key={href} />
-      ))}
-
-      <h2>Design DNA — seed {dna.seed}</h2>
-
-      <div className="block">
-        <h3>Typography — {dna.typography.name}</h3>
-        <p
-          style={{
-            fontFamily: `"${dna.typography.heading.family}", sans-serif`,
-            fontSize: "2rem",
-            fontWeight: dna.typography.heading.weights[dna.typography.heading.weights.length - 1],
-            margin: "0 0 8px",
-          }}
-        >
-          {dna.brief.name || "Your heading, in this font"}
-        </p>
-        <p style={{ fontFamily: `"${dna.typography.body.family}", sans-serif`, margin: 0 }}>
-          Body text set in {dna.typography.body.family}. {dna.typography.personality}.
-        </p>
-      </div>
-
-      <div className="block">
-        <h3>Colors — {dna.colors.harmony}</h3>
-        <div className="swatches">
-          {semanticKeys.map((key) => (
-            <div key={key} className="swatch">
-              <div className="swatch-color" style={{ background: dna.colors[key] }} />
-              <span>{key}</span>
-              <code>{dna.colors[key]}</code>
-            </div>
-          ))}
-        </div>
-        <div className="neutral-row">
-          {dna.colors.neutral.map((c, i) => (
-            <div key={i} className="neutral-chip" style={{ background: c }} title={c} />
-          ))}
-        </div>
-      </div>
-
-      <div className="block">
-        <h3>Spacing & radius — {dna.spacing.name}</h3>
-        <div className="scale-row">
-          {dna.spacing.scale.map((v, i) => (
-            <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
-          ))}
-        </div>
-      </div>
-
-      <div className="block">
-        <h3>Motion — {dna.motion.name}</h3>
-        <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
-      </div>
-
-      <div className="block">
-        <h3>Signature details (mandatory)</h3>
-        <ul>
-          {dna.signatureDetails.map((d) => (
-            <li key={d}>{d}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="block">
-        <h3>Forbidden</h3>
-        <ul>
-          {dna.forbidden.map((f) => (
-            <li key={f}>{f}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="downloads">
-        <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>Download STYLE_CONTRACT.md</button>
-        <button onClick={() => download("tokens.css", result.css)}>Download tokens.css</button>
-        <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>Download tailwind.tokens.js</button>
-        <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
-          Download design-dna.json
-        </button>
-      </div>
-    </section>
-  );
-}
-
-function MotionDemo({ easing, duration, accent }: { easing: string; duration: string; accent: string }) {
-  const [moved, setMoved] = useState(false);
-  return (
-    <button
-      className="motion-demo"
-      onClick={() => setMoved((m) => !m)}
-      style={{
-        transform: moved ? "translateX(140px)" : "translateX(0)",
-        transition: `transform ${duration} ${easing}`,
-        background: accent,
-      }}
-    >
-      click me
-    </button>
   );
 }
