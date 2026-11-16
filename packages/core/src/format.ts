@@ -2,8 +2,9 @@ import type { DesignDNA } from "./types.js";
 
 export function toStyleContractMarkdown(dna: DesignDNA): string {
   const { brief, typography, colors, spacing, motion, signatureDetails, forbidden } = dna;
-  return `<!-- BAROXY DESIGN DNA — generated for "${brief.name}", seed ${dna.seed} -->
+  return `<!-- BAROXY DESIGN DNA — generated for "${brief.name}", seed ${dna.seed}, @baroxy/core@${dna.coreVersion} -->
 <!-- This block is binding. Any coding agent working on this project must follow it exactly. -->
+<!-- Determinism is guaranteed within this core version, not across versions — pin @baroxy/core@${dna.coreVersion} to reproduce this exact DNA later. -->
 
 ## Design DNA: ${brief.name}
 
@@ -35,6 +36,9 @@ ${signatureDetails.map((d) => `- ${d}`).join("\n")}
 
 ### Forbidden — the tells that make an app look AI-generated
 ${forbidden.map((f) => `- ${f}`).join("\n")}
+
+---
+Generated with \`@baroxy/core@${dna.coreVersion}\`. A given core version always maps this brief to this DNA; a later version may expand its pools and produce a different one. Pin \`@baroxy/core@${dna.coreVersion}\` (and the matching \`@baroxy/cli\`/\`@baroxy/mcp-server\`) if you need to reproduce this exact result again.
 `;
 }
 

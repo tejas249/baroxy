@@ -1,6 +1,6 @@
 {
   "name": "@baroxy/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Deterministic design-identity generation engine for Baroxy.",
   "license": "MIT",
   "type": "module",

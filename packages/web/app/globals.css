@@ -514,6 +514,12 @@ a {
   margin: 0;
 }
 
+.version-tag {
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
 .block {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);

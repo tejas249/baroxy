@@ -45,6 +45,13 @@ export interface DesignDNA {
   brief: DesignBrief;
   /** Deterministic seed derived from the brief — same brief always reproduces the same DNA. */
   seed: number;
+  /**
+   * The @baroxy/core version that produced this DNA. Determinism is guaranteed *within* a
+   * version — a later version may expand the font/spacing/motion/signature-detail pools and
+   * shift the output for the same brief. Pin this exact core version if you need to reproduce
+   * this DNA again later. See CHANGELOG.md.
+   */
+  coreVersion: string;
   typography: FontPairing;
   colors: ColorSystem;
   spacing: SpacingSystem;

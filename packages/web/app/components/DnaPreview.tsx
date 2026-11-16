@@ -33,7 +33,9 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
         <link rel="stylesheet" href={href} key={href} />
       ))}
 
-      <h2>Design DNA — seed {dna.seed}</h2>
+      <h2>
+        Design DNA — seed {dna.seed} <span className="version-tag">@baroxy/core@{dna.coreVersion}</span>
+      </h2>
 
       <div className="block">
         <h3>Typography — {dna.typography.name}</h3>
