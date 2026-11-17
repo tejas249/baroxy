@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { listGallery } from "../../lib/share";
 
 const TITLE = "Showcase";
-const DESCRIPTION = "Design DNAs the community has chosen to share publicly — real briefs, real variety.";
+const DESCRIPTION = "Design DNAs the community has chosen to share publicly. Real briefs, real variety.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -31,7 +31,7 @@ export default async function ShowcasePage() {
   const entries = await listGallery(48);
 
   return (
-    <main className="shell">
+    <main className="shell shell--wide">
       <header className="tool-header">
         <p className="kicker">Showcase</p>
         <h1>Design DNA, out in the wild.</h1>
@@ -43,7 +43,7 @@ export default async function ShowcasePage() {
       </header>
 
       {entries.length === 0 ? (
-        <p className="sub">Nothing shared publicly yet — be the first.</p>
+        <p className="sub">Nothing shared publicly yet. Be the first.</p>
       ) : (
         <div className="gallery-grid">
           {entries.map((entry) => (

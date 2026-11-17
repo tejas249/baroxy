@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 const TITLE = "Generate your Design DNA";
 const DESCRIPTION =
-  "Describe your project — name, industry, audience, mood — and get a locked typography, color, spacing, and motion identity in seconds. Free, no sign-up.";
+  "Describe your project (name, industry, audience, mood) and get a locked typography, color, spacing, and motion identity in seconds. Free, no sign-up.";
 
 export const metadata: Metadata = {
   title: TITLE,

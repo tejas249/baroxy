@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { track } from "@vercel/analytics";
-import { Sparkles, Link2 } from "lucide-react";
+import { Sparkle, LinkSimple } from "@phosphor-icons/react";
 import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
 import { ShareLink } from "../components/ShareLink";
 
@@ -10,8 +10,8 @@ async function readError(res: Response): Promise<string> {
   if (res.status === 429) {
     const retryAfter = res.headers.get("Retry-After");
     return retryAfter
-      ? `You're generating too fast — try again in ${retryAfter}s.`
-      : "You're generating too fast — slow down and try again shortly.";
+      ? `You're generating too fast. Try again in ${retryAfter}s.`
+      : "You're generating too fast. Slow down and try again shortly.";
   }
   const data = await res.json().catch(() => null);
   return data?.error || `Request failed (${res.status})`;
@@ -81,7 +81,7 @@ export default function GeneratePage() {
         <p className="kicker">Design DNA generator</p>
         <h1>Describe your project, get your rules.</h1>
         <p className="sub">
-          Fill in the brief below. The same inputs always produce the same Design DNA — different inputs produce a
+          Fill in the brief below. The same inputs always produce the same Design DNA. Different inputs produce a
           different one. Nothing here is random per request.
         </p>
       </header>
@@ -118,7 +118,7 @@ export default function GeneratePage() {
           <input value={references} onChange={(e) => setReferences(e.target.value)} placeholder="Linear, Notion" />
         </label>
         <button type="submit" disabled={loading}>
-          <Sparkles size={15} strokeWidth={2} />
+          <Sparkle size={16} weight="duotone" />
           {loading ? "Generating..." : "Generate Design DNA"}
         </button>
         {error && <p className="error">{error}</p>}
@@ -134,7 +134,7 @@ export default function GeneratePage() {
                   List this publicly in the <a href="/showcase">showcase</a>
                 </label>
                 <button type="button" onClick={handleShare} disabled={sharing}>
-                  <Link2 size={15} strokeWidth={2} />
+                  <LinkSimple size={16} weight="duotone" />
                   {sharing ? "Creating link..." : "Save & get shareable link"}
                 </button>
               </>

@@ -3,18 +3,26 @@ import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
+import { Fraunces } from "next/font/google";
 import "./globals.css";
 
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-wordmark",
+  display: "swap",
+});
+
 const SITE_NAME = "Baroxy";
-const TITLE = "Baroxy — Design DNA for AI-coded apps";
+const TITLE = "Baroxy: Design DNA for AI-coded apps";
 const DESCRIPTION =
-  "Describe your project once and get a locked typography, color, spacing, and motion identity — plus the exact AI tells to avoid — that any coding agent can follow.";
+  "Describe your project once and get a locked typography, color, spacing, and motion identity, plus the exact AI tells to avoid, that any coding agent can follow.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://baroxy.vercel.app"),
   title: {
     default: TITLE,
-    template: "%s — Baroxy",
+    template: "%s | Baroxy",
   },
   description: DESCRIPTION,
   applicationName: SITE_NAME,
@@ -48,12 +56,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#fbf8f3",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={fraunces.variable}>
       <body>
         <SiteHeader />
         {children}
