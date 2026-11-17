@@ -24,6 +24,7 @@ import {
   ColumnIllus,
 } from "./components/Illustrations";
 import { Terminal, Cmd, Out, WebMock } from "./components/ProductMocks";
+import { SITE_URL, SITE_NAME, REPO_URL, DESCRIPTION, FAQS, STEPS as JSON_STEPS } from "../lib/site";
 
 const HEADLINE = "Stop your AI-coded app from looking like".split(" ");
 const HEADLINE_EM = ["everyone", "else's."];
@@ -97,47 +98,37 @@ const STEPS = [
   },
 ];
 
-const FAQS = [
-  {
-    q: "Is the output actually deterministic, or just randomized to look custom?",
-    a: "Deterministic. Your brief is hashed and used to seed the generator, so the exact same inputs always reproduce the exact same typography, colors, spacing and motion. Change the brief and you get a different, but still reproducible, result.",
-  },
-  {
-    q: "What do I actually get?",
-    a: "A style contract (Markdown), a tokens.css file, a tailwind.tokens.js file and a raw design-dna.json, plus a fixed list of signature details your UI must include and anti-patterns it must avoid.",
-  },
-  {
-    q: "How do I use this with Claude Code, Cursor, or another agent?",
-    a: "Paste the generated STYLE_CONTRACT.md into your agent's context before it starts building, or run the Baroxy MCP server locally so your agent can call generate_design_dna and get_style_contract directly as tools.",
-  },
-  {
-    q: "Is this free?",
-    a: "Yes. The web generator, CLI and MCP server are all free to use.",
-  },
-  {
-    q: "Does it lock me into Tailwind, or a specific framework?",
-    a: "No. You get plain CSS variables, a Tailwind token file and a framework-agnostic style contract. Use whichever one fits your stack.",
-  },
-  {
-    q: "Why would a tool meant to fight generic AI output risk looking generic itself?",
-    a: "Fair question. It's why this site doesn't ship the default shadcn card grid you'll see in the 'what to avoid' section. If Baroxy ever looks like every other AI-generated landing page, that's a bug, not a vibe.",
-  },
-];
-
 const JSON_LD = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "Baroxy",
-  url: "https://baroxy.vercel.app",
-  applicationCategory: "DeveloperApplication",
-  operatingSystem: "Any",
-  description:
-    "Generates a locked, deterministic design identity (typography, color, spacing, motion, signature details, and banned AI tells) from a short brief, for AI coding agents to follow.",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${SITE_URL}/#app`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      image: `${SITE_URL}/opengraph-image`,
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Any",
+      description: DESCRIPTION,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      sameAs: [REPO_URL, "https://www.npmjs.com/package/@baroxy/cli", "https://www.npmjs.com/package/@baroxy/mcp-server"],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${SITE_URL}/#faq`,
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+    {
+      "@type": "HowTo",
+      "@id": `${SITE_URL}/#how-to`,
+      name: "How to give an AI-coded app a unique design identity with Baroxy",
+      step: JSON_STEPS.map((st, i) => ({ "@type": "HowToStep", position: i + 1, name: st.name, text: st.text })),
+    },
+  ],
 };
 
 export default function HomePage() {
