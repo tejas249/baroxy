@@ -24,7 +24,7 @@ export const KEYWORDS = [
 export const FAQS = [
   {
     q: "Is the output actually deterministic, or just randomized to look custom?",
-    a: "Deterministic. Your brief is hashed and used to seed the generator, so the exact same inputs always reproduce the exact same preset, typography, colors, spacing and motion. Change the brief and you get a different, but still reproducible, result.",
+    a: "Deterministic. Your brief is hashed and used to seed the generator, so the exact same inputs always reproduce the exact same typography, colors, spacing and motion. Change the brief and you get a different, but still reproducible, result.",
   },
   {
     q: "What do I actually get?",
@@ -50,7 +50,7 @@ export const FAQS = [
 
 export const STEPS = [
   { name: "Describe your project", text: "Enter a name, industry, audience, mood and reference brands. It takes about thirty seconds and needs no sign-up." },
-  { name: "Get a locked Design DNA", text: "Baroxy matches your brief to one of 100+ curated presets and returns its typography pairing, light or dark palette with real surface and text roles, radius system, motion feel, mandatory signature details and a fixed list of AI tells to avoid." },
+  { name: "Get a locked Design DNA", text: "Baroxy returns a typography pairing, color harmony, spacing scale, motion system, mandatory signature details and a fixed list of AI tells to avoid." },
   { name: "Hand it to your agent", text: "Paste the style contract into Claude Code, Cursor or any coding agent, or connect the Baroxy MCP server so every screen follows the same rules." },
   { name: "Ship something that looks like yours", text: "The same brief always reproduces the same DNA, and different briefs produce different ones." },
 ];
