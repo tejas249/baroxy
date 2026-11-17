@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Type, Palette, Ruler, Zap, CheckSquare, Ban, Download } from "lucide-react";
+import { TextAa, Palette, Ruler, Lightning, CheckSquare, Prohibit, DownloadSimple, type Icon as PhosphorIcon } from "@phosphor-icons/react";
 import type { DesignDNA } from "@baroxy/core";
 
 export interface GenerateResult {
@@ -21,10 +21,10 @@ export function download(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
-function BlockTitle({ icon: Icon, children }: { icon: typeof Type; children: ReactNode }) {
+function BlockTitle({ icon: Icon, children }: { icon: PhosphorIcon; children: ReactNode }) {
   return (
     <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <Icon size={17} strokeWidth={2} style={{ color: "var(--text-dim)", flexShrink: 0 }} />
+      <Icon size={20} weight="duotone" style={{ color: "var(--text-dim)", flexShrink: 0 }} />
       {children}
     </h3>
   );
@@ -44,11 +44,11 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       ))}
 
       <h2>
-        Design DNA — seed {dna.seed} <span className="version-tag">@baroxy/core@{dna.coreVersion}</span>
+        Design DNA · seed {dna.seed} <span className="version-tag">@baroxy/core@{dna.coreVersion}</span>
       </h2>
 
       <div className="block">
-        <BlockTitle icon={Type}>Typography — {dna.typography.name}</BlockTitle>
+        <BlockTitle icon={TextAa}>Typography · {dna.typography.name}</BlockTitle>
         <p
           style={{
             fontFamily: `"${dna.typography.heading.family}", sans-serif`,
@@ -66,7 +66,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Palette}>Colors — {dna.colors.harmony}</BlockTitle>
+        <BlockTitle icon={Palette}>Colors · {dna.colors.harmony}</BlockTitle>
         <div className="swatches">
           {semanticKeys.map((key) => (
             <div key={key} className="swatch">
@@ -84,7 +84,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Ruler}>Spacing & radius — {dna.spacing.name}</BlockTitle>
+        <BlockTitle icon={Ruler}>Spacing & radius · {dna.spacing.name}</BlockTitle>
         <div className="scale-row">
           {dna.spacing.scale.map((v, i) => (
             <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
@@ -93,7 +93,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Zap}>Motion — {dna.motion.name}</BlockTitle>
+        <BlockTitle icon={Lightning}>Motion · {dna.motion.name}</BlockTitle>
         <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
       </div>
 
@@ -107,7 +107,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Ban}>Forbidden</BlockTitle>
+        <BlockTitle icon={Prohibit}>Forbidden</BlockTitle>
         <ul>
           {dna.forbidden.map((f) => (
             <li key={f}>{f}</li>
@@ -117,16 +117,16 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
 
       <div className="downloads">
         <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>
-          <Download size={15} strokeWidth={2} /> STYLE_CONTRACT.md
+          <DownloadSimple size={16} weight="bold" /> STYLE_CONTRACT.md
         </button>
         <button onClick={() => download("tokens.css", result.css)}>
-          <Download size={15} strokeWidth={2} /> tokens.css
+          <DownloadSimple size={16} weight="bold" /> tokens.css
         </button>
         <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>
-          <Download size={15} strokeWidth={2} /> tailwind.tokens.js
+          <DownloadSimple size={16} weight="bold" /> tailwind.tokens.js
         </button>
         <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
-          <Download size={15} strokeWidth={2} /> design-dna.json
+          <DownloadSimple size={16} weight="bold" /> design-dna.json
         </button>
       </div>
 

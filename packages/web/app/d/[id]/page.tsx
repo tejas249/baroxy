@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const record = await loadShare(id);
   if (!record) return { title: "Design DNA not found" };
 
-  const title = `${record.dna.brief.name} — Design DNA`;
+  const title = `${record.dna.brief.name}: Design DNA`;
   const description = `A locked Design DNA generated for "${record.dna.brief.name}": ${record.dna.typography.name} typography, ${record.dna.colors.harmony} color system, ${record.dna.spacing.name} spacing.`;
 
   return {

@@ -14,8 +14,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const name = record?.dna.brief.name ?? "Baroxy";
   const typography = record?.dna.typography.name ?? "";
   const industry = record?.dna.brief.industry ?? "";
-  const primary = record?.dna.colors.primary ?? "#ffde59";
-  const secondary = record?.dna.colors.secondary ?? "#ff8a3d";
+  const primary = record?.dna.colors.primary ?? "#6b1d3a";
+  const secondary = record?.dna.colors.secondary ?? "#e0a085";
   const accent = record?.dna.colors.accent ?? "#1f8a4c";
 
   return new ImageResponse(
@@ -44,7 +44,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           {typography ? ` · ${typography}` : ""}
         </div>
         <div style={{ display: "flex", marginTop: "auto", fontSize: 24, color: "#b8740f" }}>
-          [baroxy] — Design DNA
+          baroxy · Design DNA
         </div>
       </div>
     ),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check } from "@phosphor-icons/react";
 
 export function ShareLink({ url }: { url: string }) {
   const [copied, setCopied] = useState(false);
@@ -20,7 +20,7 @@ export function ShareLink({ url }: { url: string }) {
     <div className="share-link">
       <input value={url} readOnly onFocus={(e) => e.currentTarget.select()} />
       <button type="button" onClick={copy}>
-        {copied ? <Check size={14} strokeWidth={2} /> : <Copy size={14} strokeWidth={2} />}
+        {copied ? <Check size={14} weight="bold" /> : <Copy size={14} weight="duotone" />}
         {copied ? "Copied!" : "Copy link"}
       </button>
     </div>
