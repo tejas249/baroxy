@@ -2390,3 +2390,115 @@ body {
 .logo-word-x {
   color: var(--accent);
 }
+
+/* =====================================================================
+   Responsive header: pill on desktop, logo + CTA + menu button below 900px
+   ===================================================================== */
+.hdr {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  padding: 0 16px;
+}
+.hdr-bar {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 20px;
+  background: rgba(255, 253, 250, 0.82);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+}
+.hdr-logo {
+  flex: none;
+}
+.hdr-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+.hdr-nav a,
+.hdr-menu a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  transition: background 150ms ease, color 150ms ease;
+}
+.hdr-nav a:hover,
+.hdr-menu a:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+.hdr-cta {
+  flex: none;
+}
+.hdr-cta-short,
+.hdr-toggle,
+.hdr-menu {
+  display: none;
+}
+.hdr-toggle {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .hdr-nav {
+    display: none;
+  }
+  .hdr-cta {
+    margin-left: auto;
+  }
+  .hdr-toggle {
+    display: inline-flex;
+  }
+  .hdr-menu:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    max-width: 1040px;
+    margin: 8px auto 0;
+    padding: 8px;
+    gap: 2px;
+    background: rgba(255, 253, 250, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--divider);
+    border-radius: 24px;
+    box-shadow: var(--shadow-md);
+  }
+  .hdr-menu a {
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .hdr {
+    padding: 0 10px;
+  }
+  .hdr-bar {
+    padding-left: 14px;
+    gap: 8px;
+  }
+  .hdr-cta-long {
+    display: none;
+  }
+  .hdr-cta-short {
+    display: inline;
+  }
+}
