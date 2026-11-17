@@ -11,6 +11,15 @@ stamped into `STYLE_CONTRACT.md`'s header and footer). If you need a brief to ke
 the exact DNA you built against, pin that exact version of `@baroxy/core` — and the matching
 `@baroxy/cli` / `@baroxy/mcp-server` — in your project instead of letting `npx` fetch latest.
 
+## 0.4.0
+
+- **100+ curated design presets.** The generator now starts from a hand-tuned preset (palette with
+  real background/surface/text/border roles in light *or* dark, type pairing, radius and motion)
+  chosen from the brief's mood, industry and audience, instead of a random hue plus a random font.
+- `DesignDNA` gains `preset`, `rationale`, and `colors.{mode,background,surface,text,muted,border,onPrimary}`.
+- `STYLE_CONTRACT.md`, `tokens.css` and the Tailwind tokens include the new surface/text roles.
+- **Output for existing briefs changes relative to 0.3.0.** Pin `@baroxy/core@0.3.0` to reproduce older DNA.
+
 ## 0.3.0
 
 - Added `DesignDNA.coreVersion`, stamped into every generated DNA and into

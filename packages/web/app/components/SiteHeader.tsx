@@ -7,7 +7,7 @@ import { List, X } from "@phosphor-icons/react";
 import Logo from "./Logo";
 
 const NAV = [
-  { href: "/#problem", label: "Product" },
+  { href: "/presets", label: "Presets" },
   { href: "/#how-it-works", label: "How it works" },
   { href: "/showcase", label: "Showcase" },
   { href: "/#faq", label: "FAQ" },

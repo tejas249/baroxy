@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { generateDesignDNA } from "../src/generate.js";
 import { CORE_VERSION } from "../src/version.js";
-import { FONT_PAIRINGS } from "../src/fonts.js";
+import { DESIGN_PRESETS } from "../src/presets.js";
 import { SPACING_SYSTEMS } from "../src/spacing.js";
 import { MOTION_SYSTEMS } from "../src/motion.js";
 import type { DesignBrief } from "../src/types.js";
@@ -37,9 +37,25 @@ describe("generateDesignDNA", () => {
     expect(a.seed).not.toBe(b.seed);
   });
 
-  it("always returns a typography pairing from the known pool", () => {
+  it("always builds the DNA from a known preset", () => {
     const dna = generateDesignDNA(baseBrief);
-    expect(FONT_PAIRINGS.map((f) => f.name)).toContain(dna.typography.name);
+    const preset = DESIGN_PRESETS.find((p) => p.id === dna.preset.id);
+    expect(preset).toBeDefined();
+    expect(dna.typography).toEqual(preset!.typography);
+    expect(dna.colors).toEqual(preset!.colors);
+    expect(dna.rationale.length).toBeGreaterThan(10);
+  });
+
+  it("matches presets to the brief's industry and mood", () => {
+    const dna = generateDesignDNA({ name: "Roast", industry: "coffee", audience: "commuters", mood: ["warm", "minimal"] });
+    const preset = DESIGN_PRESETS.find((p) => p.id === dna.preset.id)!;
+    expect(preset.industries.some((i) => ["coffee", "cafe", "food"].includes(i)) || preset.moods.includes("warm")).toBe(true);
+  });
+
+  it("honours dark-leaning briefs with dark presets sometimes and light presets other times", () => {
+    const modes = new Set<string>();
+    for (let i = 0; i < 80; i++) modes.add(generateDesignDNA({ name: `P${i}`, industry: "x", audience: "y", mood: [] }).colors.mode);
+    expect(modes.size).toBe(2);
   });
 
   it("always returns a spacing system from the known pool", () => {
@@ -63,13 +79,19 @@ describe("generateDesignDNA", () => {
     expect(dna.forbidden.length).toBeGreaterThan(0);
   });
 
-  it("spreads briefs across many distinct typography/spacing/motion combos", () => {
+  it("spreads unconstrained briefs across most of the preset library", () => {
     const seen = new Set<string>();
-    for (let i = 0; i < 500; i++) {
-      const dna = generateDesignDNA({ name: `Project ${i}`, industry: "x", audience: "y", mood: [] });
-      seen.add(`${dna.typography.name}|${dna.spacing.name}|${dna.motion.name}`);
+    for (let i = 0; i < 1000; i++) {
+      seen.add(generateDesignDNA({ name: `Project ${i}`, industry: "x", audience: "y", mood: [] }).preset.id);
     }
-    // With 34 x 9 x 8 pools, 500 random briefs should land on well over half of them being unique.
-    expect(seen.size).toBeGreaterThan(300);
+    expect(seen.size).toBeGreaterThan(85);
+  });
+
+  it("gives briefs with the same industry and mood a varied, relevant set of presets", () => {
+    const seen = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      seen.add(generateDesignDNA({ name: `Shop ${i}`, industry: "fintech", audience: "founders", mood: ["trustworthy"] }).preset.id);
+    }
+    expect(seen.size).toBeGreaterThanOrEqual(4);
   });
 });

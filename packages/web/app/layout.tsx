@@ -3,9 +3,13 @@ import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
-import { Fraunces } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./ui.css";
 import { SITE_URL, SITE_NAME, REPO_URL, TAGLINE, TITLE, DESCRIPTION, KEYWORDS } from "../lib/site";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono-ui", display: "swap" });
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -85,7 +89,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={fraunces.variable}>
+    <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
         <SiteHeader />

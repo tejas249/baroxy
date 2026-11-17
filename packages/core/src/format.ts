@@ -1,7 +1,7 @@
 import type { DesignDNA } from "./types.js";
 
 export function toStyleContractMarkdown(dna: DesignDNA): string {
-  const { brief, typography, colors, spacing, motion, signatureDetails, forbidden } = dna;
+  const { brief, typography, colors, spacing, motion, signatureDetails, forbidden, preset, rationale } = dna;
   return `<!-- BAROXY DESIGN DNA — generated for "${brief.name}", seed ${dna.seed}, @baroxy/core@${dna.coreVersion} -->
 <!-- This block is binding. Any coding agent working on this project must follow it exactly. -->
 <!-- Determinism is guaranteed within this core version, not across versions — pin @baroxy/core@${dna.coreVersion} to reproduce this exact DNA later. -->
@@ -10,14 +10,21 @@ export function toStyleContractMarkdown(dna: DesignDNA): string {
 
 **Industry:** ${brief.industry} · **Audience:** ${brief.audience} · **Mood:** ${brief.mood.join(", ") || "unspecified"}
 
+### Preset — "${preset.name}"
+- Inspired by: ${preset.inspiredBy}
+- Why this one: ${rationale}
+- Canvas: **${colors.mode} mode** — build the default theme on \`${colors.background}\`, not the opposite.
+
 ### Typography — "${typography.name}"
 - Heading: **${typography.heading.family}** (weights: ${typography.heading.weights.join(", ")})
 - Body: **${typography.body.family}** (weights: ${typography.body.weights.join(", ")})
 - Personality: ${typography.personality}
 - Google Fonts: ${typography.heading.googleFontUrl}${typography.body.googleFontUrl !== typography.heading.googleFontUrl ? ` / ${typography.body.googleFontUrl}` : ""}
 
-### Color system — ${colors.harmony}
-- Primary: \`${colors.primary}\`
+### Color system — ${colors.mode} canvas
+- Background: \`${colors.background}\` · Surface: \`${colors.surface}\` · Border: \`${colors.border}\`
+- Text: \`${colors.text}\` · Muted text: \`${colors.muted}\`
+- Primary: \`${colors.primary}\` (text on it: \`${colors.onPrimary}\`)
 - Secondary: \`${colors.secondary}\`
 - Accent: \`${colors.accent}\`
 - Neutral scale: ${colors.neutral.map((c) => `\`${c}\``).join(", ")}
@@ -49,6 +56,14 @@ export function toCSSVariables(dna: DesignDNA): string {
   return `:root {
   --font-heading: "${typography.heading.family}", sans-serif;
   --font-body: "${typography.body.family}", sans-serif;
+
+  --color-bg: ${colors.background};
+  --color-surface: ${colors.surface};
+  --color-text: ${colors.text};
+  --color-muted: ${colors.muted};
+  --color-border: ${colors.border};
+  --color-on-primary: ${colors.onPrimary};
+  color-scheme: ${colors.mode};
 
   --color-primary: ${colors.primary};
   --color-secondary: ${colors.secondary};
@@ -82,6 +97,12 @@ export const baroxyTokens = {
     body: ["${typography.body.family}", "sans-serif"],
   },
   colors: {
+    background: "${colors.background}",
+    surface: "${colors.surface}",
+    text: "${colors.text}",
+    muted: "${colors.muted}",
+    border: "${colors.border}",
+    "on-primary": "${colors.onPrimary}",
     primary: "${colors.primary}",
     secondary: "${colors.secondary}",
     accent: "${colors.accent}",

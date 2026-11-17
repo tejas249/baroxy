@@ -79,9 +79,18 @@ export function generateColorSystem(rng: () => number, mood: string[]): ColorSys
     return hslToHex(baseHue, 8, l);
   });
 
+  const background = neutral[0];
+  const text = neutral[9];
   return {
     baseHue,
     harmony,
+    mode: "light",
+    background,
+    surface: "#ffffff",
+    text,
+    muted: neutral[5],
+    border: neutral[2],
+    onPrimary: "#ffffff",
     primary: hslToHex(baseHue, saturation, lightness),
     secondary: hslToHex(secondaryHue, saturation - 10, lightness + 5),
     accent: hslToHex(accentHue, Math.min(saturation + 10, 90), lightness),

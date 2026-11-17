@@ -7,3 +7,4 @@ design-dna/
 .env
 .env*.local
 *.tsbuildinfo
+.next-*/

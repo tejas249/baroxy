@@ -13,12 +13,26 @@ export interface FontPairing {
   personality: string;
 }
 
-export type ColorHarmony = "complementary" | "analogous" | "triadic" | "monochrome-accent";
+export type ColorHarmony = "complementary" | "analogous" | "triadic" | "monochrome-accent" | "preset";
 
 export interface ColorSystem {
   baseHue: number;
   harmony: ColorHarmony;
+  /** Whether the palette is designed for a light or a dark canvas. */
+  mode: "light" | "dark";
+  /** Page canvas colour. */
+  background: string;
+  /** Raised surface (cards, panels, inputs). */
+  surface: string;
+  /** Primary body text. */
+  text: string;
+  /** Secondary / muted text. */
+  muted: string;
+  /** Hairlines and component borders. */
+  border: string;
   primary: string;
+  /** Readable text colour to place on top of `primary`. */
+  onPrimary: string;
   secondary: string;
   accent: string;
   /** 10 steps, lightest to darkest, tinted toward baseHue instead of pure gray. */
@@ -41,6 +55,20 @@ export interface MotionSystem {
   durations: { fast: string; base: string; slow: string };
 }
 
+/** A complete, curated design identity the generator can start from. */
+export interface DesignPreset {
+  id: string;
+  name: string;
+  /** The design language this preset is inspired by (never a verbatim copy). */
+  inspiredBy: string;
+  moods: string[];
+  industries: string[];
+  colors: ColorSystem;
+  typography: FontPairing;
+  spacing: SpacingSystem;
+  motion: MotionSystem;
+}
+
 export interface DesignDNA {
   brief: DesignBrief;
   /** Deterministic seed derived from the brief — same brief always reproduces the same DNA. */
@@ -52,6 +80,10 @@ export interface DesignDNA {
    * this DNA again later. See CHANGELOG.md.
    */
   coreVersion: string;
+  /** The curated preset this DNA was built from. */
+  preset: { id: string; name: string; inspiredBy: string };
+  /** Plain-language reason this preset fits the brief. */
+  rationale: string;
   typography: FontPairing;
   colors: ColorSystem;
   spacing: SpacingSystem;
