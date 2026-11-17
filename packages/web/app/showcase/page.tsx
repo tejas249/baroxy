@@ -28,7 +28,9 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ShowcasePage() {
-  const entries = await listGallery(48);
+  // The gallery lives in Vercel Blob. Without credentials (CI, local builds) or if the store is
+  // unreachable, render the empty state instead of failing the whole build.
+  const entries = await listGallery(48).catch(() => []);
 
   return (
     <main className="shell shell--wide">
