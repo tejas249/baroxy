@@ -15,6 +15,7 @@ import { Reveal } from "./components/Reveal";
 import Moodboard from "./components/Moodboard";
 import SpotlightCard from "./components/SpotlightCard";
 import CountUp from "./components/CountUp";
+import { DESIGN_PRESETS, SIGNATURE_DETAILS, ANTI_PATTERNS } from "@baroxy/core";
 import {
   FontIllus,
   GradientIllus,
@@ -29,11 +30,13 @@ import { SITE_URL, SITE_NAME, REPO_URL, DESCRIPTION, FAQS, STEPS as JSON_STEPS }
 const HEADLINE = "Stop your AI-coded app from looking like".split(" ");
 const HEADLINE_EM = ["everyone", "else's."];
 
+const TYPEFACES = new Set(DESIGN_PRESETS.flatMap((p) => [p.typography.heading.family, p.typography.body.family]));
+
 const STATS = [
-  { n: 34, label: "typography pairings" },
-  { n: 8, label: "motion systems" },
-  { n: 30, label: "signature details" },
-  { n: 10, label: "banned patterns" },
+  { n: DESIGN_PRESETS.length, label: "curated presets" },
+  { n: TYPEFACES.size, label: "typefaces in play" },
+  { n: SIGNATURE_DETAILS.length, label: "signature details" },
+  { n: ANTI_PATTERNS.length, label: "banned patterns" },
 ];
 
 const TELLS = [

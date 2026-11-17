@@ -3266,3 +3266,217 @@ body {
 .brief-card .slot-value {
   color: #f3ece2;
 }
+
+/* ---------- live design sample ---------- */
+
+.ds-frame {
+  container-type: inline-size;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #fff;
+}
+.ds-frame--card {
+  aspect-ratio: 16 / 11;
+}
+.ds {
+  --u: 1.62cqw;
+  font-size: var(--u);
+  min-height: 100%;
+  padding: 1.6em 2em 2em;
+  background: var(--s-bg);
+  color: var(--s-text);
+  font-family: var(--s-body);
+  font-weight: var(--s-body-w);
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2em;
+  text-align: left;
+}
+.ds-frame--full .ds {
+  --u: 1.5cqw;
+}
+.ds-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6em;
+  padding-bottom: 1.1em;
+  border-bottom: 1px solid var(--s-border);
+}
+.ds-brand {
+  font-family: var(--s-head);
+  font-weight: var(--s-head-w);
+  font-size: 1.25em;
+  letter-spacing: -0.01em;
+}
+.ds-links {
+  display: flex;
+  gap: 1.2em;
+  margin-right: auto;
+  color: var(--s-muted);
+  font-style: normal;
+}
+.ds-links i {
+  font-style: normal;
+}
+.ds-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9em;
+}
+.ds-eyebrow {
+  font-size: 0.8em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--s-accent);
+  font-weight: 600;
+}
+.ds-title {
+  margin: 0;
+  font-family: var(--s-head);
+  font-weight: var(--s-head-w);
+  font-size: 3.1em;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--s-text);
+  max-width: 15ch;
+}
+.ds-lede {
+  margin: 0;
+  max-width: 38em;
+  color: var(--s-muted);
+  font-size: 1.05em;
+}
+.ds-actions {
+  display: flex;
+  gap: 0.8em;
+  margin-top: 0.4em;
+}
+.ds-btn {
+  display: inline-block;
+  padding: 0.7em 1.3em;
+  background: var(--s-primary);
+  color: var(--s-on-primary);
+  border: 1px solid var(--s-primary);
+  border-radius: var(--s-r-md);
+  font-weight: 600;
+  font-size: 1em;
+  line-height: 1.1;
+  transition: transform var(--s-dur) var(--s-ease), background var(--s-dur) var(--s-ease);
+}
+.ds-btn:hover {
+  transform: translateY(-0.15em);
+}
+.ds-btn--sm {
+  padding: 0.5em 1em;
+  font-size: 0.9em;
+  border-radius: var(--s-r-sm);
+}
+.ds-btn--ghost {
+  background: transparent;
+  color: var(--s-text);
+  border-color: var(--s-border);
+}
+.ds-btn--block {
+  display: block;
+  text-align: center;
+}
+.ds-strip {
+  display: flex;
+  gap: 0.7em;
+  margin-top: auto;
+}
+.ds-chip {
+  display: inline-block;
+  padding: 0.3em 0.8em;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--s-on-primary);
+  background: var(--s-primary);
+  border-radius: var(--s-r-sm);
+}
+.ds-chip--alt {
+  background: var(--s-secondary);
+  color: var(--s-bg);
+}
+.ds-chip--acc {
+  background: var(--s-accent);
+  color: var(--s-bg);
+}
+.ds-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2em;
+}
+.ds-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  padding: 1.3em;
+  background: var(--s-surface);
+  border: 1px solid var(--s-border);
+  border-radius: var(--s-r-md);
+}
+.ds-label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--s-muted);
+}
+.ds-num {
+  font-family: var(--s-head);
+  font-weight: var(--s-head-w);
+  font-size: 2.1em;
+  line-height: 1;
+}
+.ds-spark {
+  width: 100%;
+  height: 2.4em;
+}
+.ds-input {
+  display: block;
+  padding: 0.65em 0.9em;
+  color: var(--s-muted);
+  background: var(--s-bg);
+  border: 1px solid var(--s-border);
+  border-radius: var(--s-r-sm);
+}
+.ds-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5em;
+}
+.ds-dot {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  margin-right: 0.6em;
+}
+.ds-dot--ok {
+  background: #2fb56b;
+}
+.ds-dot--warn {
+  background: #e0a526;
+}
+.ds-dot--bad {
+  background: #e5484d;
+}
+
+
+/* ---------- preview header (preset + rationale) ---------- */
+
+.preview-head { margin: 0 0 20px; }
+.preview-head h2 { margin: 6px 0 10px; font-family: var(--font-heading); font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.02em; }
+.preview-eyebrow { margin: 0; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; }
+.preview-why { margin: 0; color: var(--text-dim); max-width: 62ch; line-height: 1.55; }
+.preview-caption { font-size: 0.8rem; color: var(--text-faint); margin: 10px 0 24px; }
+.block-title { display: flex; gap: 10px; align-items: baseline; }
+.block-title span { font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+.preview > h2 { display: none; }
+.ready-sample { margin: 22px 0 8px; text-align: left; }
+.ds-frame { box-shadow: 0 1px 2px rgba(18, 11, 14, 0.04); }

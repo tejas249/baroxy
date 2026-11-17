@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { TextAa, Palette, Ruler, Lightning, CheckSquare, Prohibit, DownloadSimple, type Icon as PhosphorIcon } from "@phosphor-icons/react";
+import { DownloadSimple } from "@phosphor-icons/react";
 import type { DesignDNA } from "@baroxy/core";
+import { DesignSample } from "./DesignSample";
 
 export interface GenerateResult {
   dna: DesignDNA;
@@ -21,10 +22,10 @@ export function download(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
-function BlockTitle({ icon: Icon, children }: { icon: PhosphorIcon; children: ReactNode }) {
+function BlockTitle({ n, children }: { n: string; children: ReactNode }) {
   return (
-    <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <Icon size={20} weight="duotone" style={{ color: "var(--text-dim)", flexShrink: 0 }} />
+    <h3 className="block-title">
+      <span>{n}</span>
       {children}
     </h3>
   );
@@ -32,10 +33,21 @@ function BlockTitle({ icon: Icon, children }: { icon: PhosphorIcon; children: Re
 
 export function DnaPreview({ result, children }: { result: GenerateResult; children?: ReactNode }) {
   const { dna } = result;
-  const fontLinks = Array.from(
-    new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl])
-  );
-  const semanticKeys = ["primary", "secondary", "accent", "success", "warning", "danger"] as const;
+  const { colors } = dna;
+  const roles: { label: string; value: string }[] = [
+    { label: "Background", value: colors.background },
+    { label: "Surface", value: colors.surface },
+    { label: "Text", value: colors.text },
+    { label: "Muted", value: colors.muted },
+    { label: "Border", value: colors.border },
+    { label: "Primary", value: colors.primary },
+    { label: "Secondary", value: colors.secondary },
+    { label: "Accent", value: colors.accent },
+    { label: "Success", value: colors.success },
+    { label: "Warning", value: colors.warning },
+    { label: "Danger", value: colors.danger },
+  ];
+  const fontLinks = Array.from(new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl]));
 
   return (
     <section className="preview">
@@ -43,48 +55,65 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
         <link rel="stylesheet" href={href} key={href} />
       ))}
 
-      <h2>
-        Design DNA · seed {dna.seed} <span className="version-tag">@baroxy/core@{dna.coreVersion}</span>
-      </h2>
+      <div className="preview-head">
+        <p className="preview-eyebrow">
+          Preset / {dna.preset.name} <span className="version-tag">@baroxy/core@{dna.coreVersion}</span>
+        </p>
+        <h2>{dna.brief.name}</h2>
+        <p className="preview-why">{dna.rationale}</p>
+      </div>
+
+      <DesignSample
+        size="full"
+        name={dna.brief.name}
+        colors={dna.colors}
+        typography={dna.typography}
+        spacing={dna.spacing}
+        motion={dna.motion}
+      />
+      <p className="preview-caption">
+        Live sample rendered with your tokens: {dna.typography.heading.family}, {dna.colors.mode} canvas, {dna.spacing.name.toLowerCase()} radius, {dna.motion.name.toLowerCase()} motion. Hover the buttons.
+      </p>
 
       <div className="block">
-        <BlockTitle icon={TextAa}>Typography · {dna.typography.name}</BlockTitle>
+        <BlockTitle n="01">Typography · {dna.typography.name}</BlockTitle>
         <p
           style={{
             fontFamily: `"${dna.typography.heading.family}", sans-serif`,
-            fontSize: "2rem",
+            fontSize: "2.4rem",
+            lineHeight: 1.1,
             fontWeight: dna.typography.heading.weights[dna.typography.heading.weights.length - 1],
-            margin: "0 0 8px",
+            margin: "0 0 10px",
             overflowWrap: "anywhere",
           }}
         >
           {dna.brief.name || "Your heading, in this font"}
         </p>
         <p style={{ fontFamily: `"${dna.typography.body.family}", sans-serif`, margin: 0 }}>
-          Body text set in {dna.typography.body.family}. {dna.typography.personality}.
+          Body set in {dna.typography.body.family}. {dna.typography.personality}.
         </p>
       </div>
 
       <div className="block">
-        <BlockTitle icon={Palette}>Colors · {dna.colors.harmony}</BlockTitle>
+        <BlockTitle n="02">Colour · {colors.mode} canvas</BlockTitle>
         <div className="swatches">
-          {semanticKeys.map((key) => (
-            <div key={key} className="swatch">
-              <div className="swatch-color" style={{ background: dna.colors[key] }} />
-              <span>{key}</span>
-              <code>{dna.colors[key]}</code>
+          {roles.map((r) => (
+            <div key={r.label} className="swatch">
+              <div className="swatch-color" style={{ background: r.value }} />
+              <span>{r.label}</span>
+              <code>{r.value}</code>
             </div>
           ))}
         </div>
         <div className="neutral-row">
-          {dna.colors.neutral.map((c, i) => (
+          {colors.neutral.map((c, i) => (
             <div key={i} className="neutral-chip" style={{ background: c }} title={c} />
           ))}
         </div>
       </div>
 
       <div className="block">
-        <BlockTitle icon={Ruler}>Spacing & radius · {dna.spacing.name}</BlockTitle>
+        <BlockTitle n="03">Spacing &amp; radius · {dna.spacing.name}</BlockTitle>
         <div className="scale-row">
           {dna.spacing.scale.map((v, i) => (
             <div key={i} className="scale-box" style={{ width: `${v * 16}px`, borderRadius: dna.spacing.radius.sm }} />
@@ -93,12 +122,12 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Lightning}>Motion · {dna.motion.name}</BlockTitle>
+        <BlockTitle n="04">Motion · {dna.motion.name}</BlockTitle>
         <MotionDemo easing={dna.motion.easing} duration={dna.motion.durations.base} accent={dna.colors.accent} />
       </div>
 
       <div className="block">
-        <BlockTitle icon={CheckSquare}>Signature details (mandatory)</BlockTitle>
+        <BlockTitle n="05">Signature details (mandatory)</BlockTitle>
         <ul>
           {dna.signatureDetails.map((d) => (
             <li key={d}>{d}</li>
@@ -107,7 +136,7 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="block">
-        <BlockTitle icon={Prohibit}>Forbidden</BlockTitle>
+        <BlockTitle n="06">Forbidden</BlockTitle>
         <ul>
           {dna.forbidden.map((f) => (
             <li key={f}>{f}</li>

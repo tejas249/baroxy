@@ -20,6 +20,7 @@ import {
   type Icon as PhosphorIcon,
 } from "@phosphor-icons/react";
 import { DnaPreview, type GenerateResult } from "../components/DnaPreview";
+import { DesignSample } from "../components/DesignSample";
 import { ShareLink } from "../components/ShareLink";
 
 type FieldKey = "name" | "industry" | "audience" | "mood" | "references";
@@ -484,7 +485,8 @@ export default function GeneratePage() {
           <link rel="stylesheet" href={result.dna.typography.heading.googleFontUrl} />
           <div className="confetti" aria-hidden="true">
             {Array.from({ length: 18 }).map((_, i) => {
-              const colors = Object.values(result.dna.colors) as string[];
+              const dc = result.dna.colors;
+              const colors = [dc.primary, dc.secondary, dc.accent, dc.surface, dc.text];
               const angle = (i / 18) * Math.PI * 2;
               return (
                 <i
@@ -515,14 +517,19 @@ export default function GeneratePage() {
           >
             {result.dna.brief.name || name}
           </h2>
-          <div className="ready-swatches">
-            {(["primary", "secondary", "accent", "success", "warning", "danger"] as const).map((k, i) => (
-              <span key={k} style={{ background: result.dna.colors[k] as string, animationDelay: `${i * 90 + 150}ms` }} title={k} />
-            ))}
+          <div className="ready-sample">
+            <DesignSample
+              name={result.dna.brief.name || name}
+              colors={result.dna.colors}
+              typography={result.dna.typography}
+              spacing={result.dna.spacing}
+              motion={result.dna.motion}
+            />
           </div>
           <div className="ready-chips">
             <span>{result.dna.typography.name}</span>
-            <span>{result.dna.colors.harmony} colors</span>
+            <span>{result.dna.preset.name}</span>
+            <span>{result.dna.colors.mode} canvas</span>
             <span>{result.dna.spacing.name}</span>
             <span>{result.dna.motion.name} motion</span>
           </div>
