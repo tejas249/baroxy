@@ -29,14 +29,14 @@ export default function BrandPage() {
       <div className="brand-grid">
         <section className="brand-card brand-card--light brand-card--wide">
           <span className="brand-label">Primary lockup</span>
-          <div className="brand-stage" style={{ fontSize: "5rem" }}>
+          <div className="brand-stage" style={{ fontSize: "clamp(2.6rem, 13vw, 5rem)" }}>
             <LogoWordmark />
           </div>
         </section>
 
         <section className="brand-card brand-card--dark brand-card--wide">
           <span className="brand-label">On dark</span>
-          <div className="brand-stage" style={{ fontSize: "5rem" }}>
+          <div className="brand-stage" style={{ fontSize: "clamp(2.6rem, 13vw, 5rem)" }}>
             <LogoWordmark />
           </div>
         </section>
