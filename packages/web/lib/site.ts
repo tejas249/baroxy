@@ -1,4 +1,16 @@
-export const SITE_URL = "https://baroxy.vercel.app";
+// Origin used for canonical URLs, Open Graph, the sitemap and structured data. Set
+// NEXT_PUBLIC_SITE_URL once a custom domain is attached; on Vercel it otherwise follows the
+// project's production domain, so these never point at a site this deployment doesn't serve.
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/+$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercel) return `https://${vercel}`;
+  // Last resort in production if system env vars are disabled: the project's own domain.
+  return process.env.NODE_ENV === "production" ? "https://baroxy-jet.vercel.app" : "http://localhost:3000";
+}
+
+export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "Baroxy";
 export const REPO_URL = "https://github.com/tejas249/baroxy";
 export const TAGLINE = "Design DNA for AI-coded apps";

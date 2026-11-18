@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Check } from "@phosphor-icons/react/dist/ssr";
+import { SITE_URL } from "../../lib/site";
 import CopyButton from "./CopyButton";
 
 export function Terminal({ title, copy, children }: { title: string; copy?: string; children: ReactNode }) {
@@ -42,7 +43,7 @@ export function WebMock() {
         <i />
         <i />
         <i />
-        <span>baroxy.vercel.app/generate</span>
+        <span>{SITE_URL.replace(/^https?:\/\//, "")}/generate</span>
       </div>
       <div className="webmock-body">
         <div className="webmock-form">

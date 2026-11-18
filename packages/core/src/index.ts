@@ -9,5 +9,6 @@ export * from "./signatureDetails.js";
 export * from "./antiPatterns.js";
 export * from "./presets.js";
 export * from "./select.js";
+export * from "./normalize.js";
 export * from "./generate.js";
 export * from "./format.js";
