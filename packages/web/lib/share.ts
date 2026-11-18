@@ -1,4 +1,6 @@
 import { randomBytes } from "node:crypto";
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { put, list } from "@vercel/blob";
 import { normalizeDesignDNA, type DesignDNA } from "@baroxy/core";
 
@@ -35,7 +37,7 @@ export function generateShareId(): string {
   return randomBytes(6).toString("base64url");
 }
 
-export async function saveShare(record: ShareRecord): Promise<void> {
+export async function saveShare(record: ShareRecord): Promise<{ listed: boolean }> {
   await put(pathFor(record.id), JSON.stringify(record), {
     access: "public",
     addRandomSuffix: false,
@@ -43,7 +45,7 @@ export async function saveShare(record: ShareRecord): Promise<void> {
     contentType: "application/json",
   });
 
-  if (!record.public) return;
+  if (!record.public) return { listed: false };
 
   // A small pointer, not the full record — keeps gallery listing cheap regardless of how big
   // the main share record grows.
@@ -57,12 +59,20 @@ export async function saveShare(record: ShareRecord): Promise<void> {
     createdAt: record.createdAt,
   };
 
-  await put(galleryPathFor(record.id), JSON.stringify(entry), {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: false,
-    contentType: "application/json",
-  });
+  // The share link itself already works at this point. If only the showcase pointer fails, keep
+  // the link and report it as unlisted rather than failing the whole request.
+  try {
+    await put(galleryPathFor(record.id), JSON.stringify(entry), {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: false,
+      contentType: "application/json",
+    });
+    return { listed: true };
+  } catch (err) {
+    console.error("share: saved record but failed to list it", { id: record.id, message: err instanceof Error ? err.message : String(err) });
+    return { listed: false };
+  }
 }
 
 export async function listGallery(limit = 24): Promise<GalleryEntry[]> {
@@ -73,27 +83,50 @@ export async function listGallery(limit = 24): Promise<GalleryEntry[]> {
 
   const entries = await Promise.all(
     sorted.slice(0, limit).map(async (blob) => {
-      const res = await fetch(blob.url, { cache: "no-store" });
-      if (!res.ok) return null;
-      return (await res.json()) as GalleryEntry;
+      // Gallery pointers are immutable once written, so they can be cached between revalidations.
+      const res = await fetch(blob.url, { next: { revalidate: 300 } }).catch(() => null);
+      if (!res || !res.ok) return null;
+      return (await res.json().catch(() => null)) as GalleryEntry | null;
     })
   );
 
   return entries.filter((e): e is GalleryEntry => e !== null);
 }
 
-export async function loadShare(id: string): Promise<ShareRecord | null> {
-  if (!/^[A-Za-z0-9_-]{6,32}$/.test(id)) return null;
+const SHARE_ID = /^[A-Za-z0-9_-]{6,32}$/;
 
+class ShareNotFound extends Error {}
+
+async function fetchShare(id: string): Promise<ShareRecord> {
   // Exact path (with extension) so a short id can never prefix-match a longer one.
   const { blobs } = await list({ prefix: pathFor(id), limit: 5 });
   const blob = blobs.find((b) => b.pathname === pathFor(id));
-  if (!blob) return null;
+  if (!blob) throw new ShareNotFound();
 
-  const res = await fetch(blob.url, { cache: "no-store" });
-  if (!res.ok) return null;
+  const res = await fetch(blob.url, { signal: AbortSignal.timeout(5000) });
+  if (!res.ok) throw new Error(`share fetch failed: ${res.status}`);
 
   const record = (await res.json()) as ShareRecord;
   // Records saved by older core versions lack newer fields; bring them up to date so old links keep working.
   return { ...record, dna: normalizeDesignDNA(record.dna) };
 }
+
+// Share records never change once written, so a found record is cached for an hour across requests.
+// Only successes are cached: a missing record or a transient storage error throws and is retried.
+const fetchShareCached = unstable_cache(fetchShare, ["share-record"], { revalidate: 3600 });
+
+/**
+ * Loads a shared Design DNA, or null if it doesn't exist. Deduplicated per request (metadata, page
+ * and OG image all ask for the same record) and cached across requests.
+ */
+export const loadShare = cache(async (id: string): Promise<ShareRecord | null> => {
+  if (!SHARE_ID.test(id)) return null;
+  try {
+    return await fetchShareCached(id);
+  } catch (err) {
+    if (!(err instanceof ShareNotFound)) {
+      console.error("share: load failed", { id, message: err instanceof Error ? err.message : String(err) });
+    }
+    return null;
+  }
+});

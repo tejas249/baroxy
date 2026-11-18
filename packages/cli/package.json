@@ -1,6 +1,6 @@
 {
   "name": "@baroxy/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI for generating a Baroxy Design DNA and writing it into your project.",
   "license": "MIT",
   "type": "module",
@@ -24,7 +24,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@baroxy/core": "^0.1.0"
+    "@baroxy/core": "^0.4.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

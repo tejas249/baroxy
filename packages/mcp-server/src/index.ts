@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { generateDesignDNA, toStyleContractMarkdown, toCSSVariables, toTailwindTokens } from "@baroxy/core";
 
-const server = new McpServer({ name: "baroxy", version: "0.1.0" });
+const server = new McpServer({ name: "baroxy", version: "0.2.0" });
 
 const briefSchema = {
   name: z.string().describe("Project name"),

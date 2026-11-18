@@ -8,7 +8,7 @@ const cache = new Map<string, Promise<ArrayBuffer | null>>();
 
 async function fetchGoogleFont(family: string, weight: number): Promise<ArrayBuffer | null> {
   const cssUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}&display=swap`;
-  const css = await fetch(cssUrl, { headers: { "User-Agent": LEGACY_UA } }).then((r) => r.text());
+  const css = await fetch(cssUrl, { headers: { "User-Agent": LEGACY_UA }, signal: AbortSignal.timeout(3000) }).then((r) => r.text());
   // Google's CSS lists several subsets (vietnamese, latin-ext, latin, ...) — grabbing the first
   // @font-face regardless of subset risks picking one that doesn't cover basic Latin glyphs.
   const match = css.match(
@@ -16,7 +16,7 @@ async function fetchGoogleFont(family: string, weight: number): Promise<ArrayBuf
   );
   if (!match) return null;
 
-  const fontRes = await fetch(match[1]);
+  const fontRes = await fetch(match[1], { signal: AbortSignal.timeout(3000) });
   if (!fontRes.ok) return null;
   return fontRes.arrayBuffer();
 }

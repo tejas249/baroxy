@@ -45,7 +45,11 @@ export function checkRateLimit(key: string, limit: number, windowMs: number): Ra
 }
 
 export function clientKey(request: Request): string {
+  // On Vercel these headers are set by the platform and can't be spoofed by the client. Prefer them
+  // over a raw X-Forwarded-For, whose first entry is attacker-controlled on other hosts.
+  const trusted = request.headers.get("x-vercel-forwarded-for") ?? request.headers.get("x-real-ip");
+  if (trusted) return trusted.split(",")[0].trim();
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) return forwardedFor.split(",")[0].trim();
-  return request.headers.get("x-real-ip") ?? "unknown";
+  return "unknown";
 }

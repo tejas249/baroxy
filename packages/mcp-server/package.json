@@ -1,6 +1,6 @@
 {
   "name": "@baroxy/mcp-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server exposing Baroxy's Design DNA generator to any MCP-compatible coding agent (Claude Code, Cursor, Windsurf, Claude Desktop).",
   "license": "MIT",
   "type": "module",
@@ -24,9 +24,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@baroxy/core": "^0.1.0",
+    "@baroxy/core": "^0.4.0",
     "@modelcontextprotocol/sdk": "^1.9.0",
-    "zod": "^3.24.1"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

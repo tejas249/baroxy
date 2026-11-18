@@ -3,6 +3,9 @@ import { listGallery } from "../lib/share";
 
 import { SITE_URL as BASE_URL } from "../lib/site";
 
+// Regenerate at most hourly instead of listing Blob storage on every crawler hit.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/`, changeFrequency: "monthly", priority: 1 },

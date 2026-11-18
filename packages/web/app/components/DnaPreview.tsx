@@ -51,6 +51,8 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
 
   return (
     <section className="preview">
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       {fontLinks.map((href) => (
         <link rel="stylesheet" href={href} key={href} />
       ))}
