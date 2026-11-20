@@ -7,7 +7,7 @@ function resolveSiteUrl(): string {
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
   if (vercel) return `https://${vercel}`;
   // Last resort in production if system env vars are disabled: the project's own domain.
-  return process.env.NODE_ENV === "production" ? "https://baroxy-jet.vercel.app" : "http://localhost:3000";
+  return process.env.NODE_ENV === "production" ? "https://baroxy.xyz" : "http://localhost:3000";
 }
 
 export const SITE_URL = resolveSiteUrl();

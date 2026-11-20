@@ -32,6 +32,16 @@ const nextConfig = {
   // Lets a second dev server run side by side without sharing (and corrupting) the .next cache.
   distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
+  // The old *.vercel.app addresses permanently redirect to the canonical domain so search
+  // engines consolidate ranking signals on baroxy.xyz.
+  async redirects() {
+    return ["baroxy-jet.vercel.app", "baroxy.vercel.app"].map((host) => ({
+      source: "/:path*",
+      has: [{ type: "host", value: host }],
+      destination: "https://baroxy.xyz/:path*",
+      permanent: true,
+    }));
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

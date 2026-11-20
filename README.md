@@ -9,7 +9,7 @@ Give it a short brief — industry, audience, mood, a couple of reference brands
 - **[`@baroxy/core`](packages/core)** — the actual generation engine (fonts, color harmonies, spacing, motion, signature details, anti-patterns). Pure, deterministic, no I/O. [npm](https://www.npmjs.com/package/@baroxy/core)
 - **[`@baroxy/cli`](packages/cli)** — `npx @baroxy/cli` prompts for a brief and writes the generated contract into `./design-dna/` in the current project. [npm](https://www.npmjs.com/package/@baroxy/cli)
 - **[`@baroxy/mcp-server`](packages/mcp-server)** — an MCP server exposing `generate_design_dna` and `get_style_contract` as tools, so any MCP-compatible coding agent (Claude Code, Cursor, Windsurf, Claude Desktop) can call it directly while scaffolding a new project. [npm](https://www.npmjs.com/package/@baroxy/mcp-server)
-- **[`packages/web`](packages/web)** — the marketing site and web generator at [baroxy.vercel.app](https://baroxy.vercel.app), live via Vercel.
+- **[`packages/web`](packages/web)** — the marketing site and web generator at [baroxy.xyz](https://baroxy.xyz), live via Vercel.
 
 ## Development
 
@@ -39,6 +39,6 @@ Point an MCP-compatible client at this command (stdio transport) to call `genera
 Published and live:
 
 - `@baroxy/core`, `@baroxy/cli`, and `@baroxy/mcp-server` are published to npm under the `@baroxy` scope.
-- The marketing site and web generator are live at [baroxy.vercel.app](https://baroxy.vercel.app).
+- The marketing site and web generator are live at [baroxy.xyz](https://baroxy.xyz).
 
 Not yet built: tests, CI, persistence/shareable links for web-generated Design DNA, a showcase gallery, and rate limiting on `/api/generate`.

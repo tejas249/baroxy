@@ -14,7 +14,7 @@
     "url": "git+https://github.com/tejas249/baroxy.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://baroxy.vercel.app",
+  "homepage": "https://baroxy.xyz",
   "bugs": "https://github.com/tejas249/baroxy/issues",
   "publishConfig": {
     "access": "public"

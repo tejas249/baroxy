@@ -1,6 +1,6 @@
 # @baroxy/cli
 
-Generate a [Baroxy](https://baroxy.vercel.app) Design DNA from your terminal and write it straight into your project.
+Generate a [Baroxy](https://baroxy.xyz) Design DNA from your terminal and write it straight into your project.
 
 ```bash
 npx @baroxy/cli --name Acme --industry fintech --audience "solo founders" --mood trustworthy,modern

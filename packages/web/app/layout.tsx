@@ -24,6 +24,11 @@ export const metadata: Metadata = {
   creator: "Baroxy",
   publisher: "Baroxy",
   category: "technology",
+  // Search Console / Bing Webmaster verification: set these env vars to the token each tool gives you.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
   alternates: { canonical: "/" },
   robots: {
     index: true,

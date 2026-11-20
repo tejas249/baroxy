@@ -1,6 +1,6 @@
 # @baroxy/mcp-server
 
-An MCP server exposing [Baroxy](https://baroxy.vercel.app)'s Design DNA generator as tools, so any MCP-compatible coding agent can pull a locked design identity mid-session instead of falling back to its defaults.
+An MCP server exposing [Baroxy](https://baroxy.xyz)'s Design DNA generator as tools, so any MCP-compatible coding agent can pull a locked design identity mid-session instead of falling back to its defaults.
 
 ## Claude Code
 
