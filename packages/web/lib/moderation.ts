@@ -56,6 +56,7 @@ export interface BriefInput {
   audience: string;
   mood: string[];
   references: string[];
+  variant?: number;
 }
 
 /** Returns an error message if the brief should be rejected, or null if it's fine. */

@@ -4,6 +4,8 @@ export interface DesignBrief {
   audience: string;
   mood: string[];
   references?: string[];
+  /** Optional "take" number. 0/undefined is the default result; higher values deterministically give a different preset for the same brief. */
+  variant?: number;
 }
 
 export interface FontPairing {

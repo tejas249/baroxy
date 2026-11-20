@@ -18,6 +18,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    // Only entries shared with "List this publicly" may be indexed; unlisted links stay private.
+    robots: record.public ? { index: true, follow: true } : { index: false, follow: false },
     alternates: { canonical: `/d/${id}` },
     openGraph: {
       type: "website",

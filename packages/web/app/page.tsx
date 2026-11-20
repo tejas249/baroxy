@@ -235,6 +235,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="section" id="before-after">
+        <div className="shell-wide">
+          <Reveal>
+            <p className="section-kicker">Before and after</p>
+            <h2>The same prompt, with and without a Design DNA.</h2>
+          </Reveal>
+          <div className="compare">
+            <div>
+              <h3>Without Baroxy</h3>
+              <ul>
+                <li>Inter on everything, weights chosen at random</li>
+                <li>Indigo-to-violet gradient hero</li>
+                <li>Rounded-xl cards with soft shadows, three in a row</li>
+                <li>Colors and radius drift from screen to screen</li>
+              </ul>
+            </div>
+            <div className="after">
+              <h3>With a locked Design DNA</h3>
+              <ul>
+                <li>A specific type pairing chosen for the brief</li>
+                <li>A palette with real background, surface and text roles</li>
+                <li>One radius scale and one motion personality, everywhere</li>
+                <li>Mandatory signature details and a list of tells to avoid</li>
+              </ul>
+            </div>
+          </div>
+          <p className="section-sub">
+            <Link href="/generate">Generate yours</Link> and watch it render live with your own tokens.
+          </p>
+        </div>
+      </section>
+
       <section className="section" id="how-it-works">
         <div className="shell-wide">
           <Reveal>

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { JsonLd, breadcrumbs } from "../components/JsonLd";
+import { SITE_URL } from "../../lib/site";
 
 const TITLE = "Generate your Design DNA";
 const DESCRIPTION =
@@ -26,5 +28,26 @@ export const metadata: Metadata = {
 };
 
 export default function GenerateLayout({ children }: { children: ReactNode }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={[
+          breadcrumbs(SITE_URL, [
+            { name: "Home", path: "/" },
+            { name: "Generate", path: "/generate" },
+          ]),
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "Baroxy Design DNA generator",
+            url: `${SITE_URL}/generate`,
+            applicationCategory: "DesignApplication",
+            operatingSystem: "Any",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          },
+        ]}
+      />
+      {children}
+    </>
+  );
 }

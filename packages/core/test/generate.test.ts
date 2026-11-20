@@ -95,3 +95,18 @@ describe("generateDesignDNA", () => {
     expect(seen.size).toBeGreaterThanOrEqual(4);
   });
 });
+
+describe("variant takes", () => {
+  const brief = { name: "Acme", industry: "fintech", audience: "founders", mood: ["bold"], references: [] as string[] };
+
+  it("leaves the default result unchanged when variant is absent or 0", async () => {
+    const { generateDesignDNA } = await import("../src/generate.js");
+    expect(generateDesignDNA({ ...brief, variant: 0 }).seed).toBe(generateDesignDNA(brief).seed);
+  });
+
+  it("is deterministic per variant and differs between variants", async () => {
+    const { generateDesignDNA } = await import("../src/generate.js");
+    expect(generateDesignDNA({ ...brief, variant: 2 })).toEqual(generateDesignDNA({ ...brief, variant: 2 }));
+    expect(generateDesignDNA({ ...brief, variant: 1 }).seed).not.toBe(generateDesignDNA(brief).seed);
+  });
+});

@@ -60,6 +60,9 @@ export default function SiteFooter() {
                 <Link href="/showcase">
                   <ImagesSquare size={16} weight="duotone" /> Showcase
                 </Link>
+                <Link href="/guides">
+                  <ListNumbers size={16} weight="duotone" /> Guides
+                </Link>
                 <Link href="/#faq">
                   <Question size={16} weight="duotone" /> FAQ
                 </Link>
@@ -96,6 +99,9 @@ export default function SiteFooter() {
 
           <div className="ft-bottom">
             <p>© {new Date().getFullYear()} Baroxy. Built for the AI coding era.</p>
+            <nav aria-label="Legal" className="ft-legal">
+              <Link href="/changelog">Changelog</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/terms">Terms</Link>
+            </nav>
             <span className="ft-status">
               <i /> Deterministic by design
             </span>

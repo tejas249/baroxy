@@ -6,9 +6,10 @@ import { CORE_VERSION } from "./version.js";
 import type { DesignBrief, DesignDNA } from "./types.js";
 
 function briefKey(brief: DesignBrief): string {
-  return [brief.name, brief.industry, brief.audience, brief.mood.join(","), (brief.references ?? []).join(",")]
-    .join("|")
-    .toLowerCase();
+  const parts = [brief.name, brief.industry, brief.audience, brief.mood.join(","), (brief.references ?? []).join(",")];
+  // Appended only for non-default takes so every existing brief keeps producing the exact same DNA.
+  if (brief.variant && brief.variant > 0) parts.push(`v${brief.variant}`);
+  return parts.join("|").toLowerCase();
 }
 
 /**

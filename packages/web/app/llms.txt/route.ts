@@ -13,6 +13,8 @@ Baroxy is a free tool (web app, CLI and MCP server) that stops AI-coded apps fro
 - [Home](${SITE_URL}/): what Baroxy is, the AI tells it bans, how it works, FAQ
 - [Generate Design DNA](${SITE_URL}/generate): the free web generator, no sign-up
 - [Showcase](${SITE_URL}/showcase): publicly shared Design DNAs
+- [Guides](${SITE_URL}/guides): how to give Claude Code, Cursor and other agents a locked design system
+- [Changelog](${SITE_URL}/changelog): what changed and when
 - [Full details for LLMs](${SITE_URL}/llms-full.txt)
 
 ## Developers

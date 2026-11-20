@@ -16,6 +16,12 @@ function toText(value: unknown, fallback: string): string {
   return typeof value === "string" && value.trim() ? value.trim() : fallback;
 }
 
+/** A non-negative whole "take" number, capped so it can't be abused as an unbounded seed. */
+function toVariant(value: unknown): number {
+  const n = typeof value === "number" ? value : Number.NaN;
+  return Number.isInteger(n) && n > 0 ? Math.min(n, 99) : 0;
+}
+
 export function parseBrief(body: Record<string, unknown>): BriefInput {
   return {
     name: toText(body.name, "Untitled Project"),
@@ -23,5 +29,6 @@ export function parseBrief(body: Record<string, unknown>): BriefInput {
     audience: toText(body.audience, "general users"),
     mood: toList(body.mood),
     references: toList(body.references),
+    ...(toVariant(body.variant) > 0 ? { variant: toVariant(body.variant) } : {}),
   };
 }

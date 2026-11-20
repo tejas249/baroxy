@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { listGallery } from "../../lib/share";
+import { JsonLd, breadcrumbs } from "../components/JsonLd";
+import { SITE_URL } from "../../lib/site";
 
 const TITLE = "Showcase";
 const DESCRIPTION = "Design DNAs the community has chosen to share publicly. Real briefs, real variety.";
@@ -34,6 +36,21 @@ export default async function ShowcasePage() {
 
   return (
     <main className="shell shell--wide">
+      <JsonLd
+        data={[
+          breadcrumbs(SITE_URL, [
+            { name: "Home", path: "/" },
+            { name: "Showcase", path: "/showcase" },
+          ]),
+          {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: TITLE,
+            description: DESCRIPTION,
+            url: `${SITE_URL}/showcase`,
+          },
+        ]}
+      />
       <header className="tool-header">
         <p className="kicker">Showcase</p>
         <h1>Design DNA, out in the wild.</h1>

@@ -93,8 +93,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={fraunces.variable}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD) }} />
+        <a href="#main" className="skip-link">Skip to content</a>
         <SiteHeader />
-        {children}
+        <div id="main" tabIndex={-1}>
+          {children}
+        </div>
         <SiteFooter />
         <Analytics />
       </body>

@@ -133,6 +133,8 @@ export default function GeneratePage() {
   const [shuffleTick, setShuffleTick] = useState(0);
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [variant, setVariant] = useState(0);
+  const [feedback, setFeedback] = useState<"yes" | "no" | null>(null);
 
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
@@ -196,8 +198,9 @@ export default function GeneratePage() {
       : curVal.trim().toLowerCase() === chip.toLowerCase();
   }
 
-  async function startBuild() {
+  async function startBuild(nextVariant = variant) {
     setError(null);
+    setFeedback(null);
     setShareUrl(null);
     setShareError(null);
     setBuildPct(0);
@@ -212,7 +215,7 @@ export default function GeneratePage() {
       const request = fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, industry, audience, mood, references }),
+        body: JSON.stringify({ name, industry, audience, mood, references, variant: nextVariant }),
       }).then(async (res) => {
         if (!res.ok) throw new Error(await readError(res));
         return (await res.json()) as GenerateResult;
@@ -245,6 +248,18 @@ export default function GeneratePage() {
     startBuild();
   }
 
+  function tryAnotherTake() {
+    const next = variant + 1;
+    setVariant(next);
+    track("another_take", { take: next });
+    startBuild(next);
+  }
+
+  function sendFeedback(helpful: boolean) {
+    setFeedback(helpful ? "yes" : "no");
+    track("feedback", { helpful });
+  }
+
   function goTo(i: number) {
     setPhase(i >= REVIEW ? "review" : "ask");
     setStep(i);
@@ -257,7 +272,7 @@ export default function GeneratePage() {
       const res = await fetch("/api/share", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, industry, audience, mood, references, public: listPublicly }),
+        body: JSON.stringify({ name, industry, audience, mood, references, variant, public: listPublicly }),
       });
       if (!res.ok) throw new Error(await readError(res));
       const { id } = await res.json();
@@ -271,6 +286,8 @@ export default function GeneratePage() {
   }
 
   function startOver() {
+    setVariant(0);
+    setFeedback(null);
     setPhase("ask");
     setStep(0);
     setResult(null);
@@ -539,6 +556,9 @@ export default function GeneratePage() {
             <button type="button" className="cta-button cta-button--shimmer" onClick={() => setPhase("full")}>
               <Check size={16} weight="bold" /> Looks right, show me everything
             </button>
+            <button type="button" className="cta-button cta-button--ghost" onClick={tryAnotherTake}>
+              <ArrowCounterClockwise size={16} weight="bold" /> Try another take
+            </button>
             <button type="button" className="cta-button cta-button--ghost" onClick={() => goTo(REVIEW)}>
               <PencilSimpleLine size={16} weight="bold" /> Tweak my brief
             </button>
@@ -584,6 +604,26 @@ export default function GeneratePage() {
               )}
               {shareUrl && <ShareLink url={shareUrl} />}
               {shareError && <p className="error">{shareError}</p>}
+            </div>
+
+            <div className="feedback" role="group" aria-label="Feedback">
+              {feedback === null ? (
+                <>
+                  <span>Was this useful?</span>
+                  <button type="button" onClick={() => sendFeedback(true)}>Yes</button>
+                  <button type="button" onClick={() => sendFeedback(false)}>Not really</button>
+                </>
+              ) : feedback === "yes" ? (
+                <span>Glad it helped. Share it or star the repo if you like it.</span>
+              ) : (
+                <span>
+                  Sorry about that.{" "}
+                  <a href="https://github.com/tejas249/baroxy/issues/new" target="_blank" rel="noreferrer">
+                    Tell us what was off
+                  </a>{" "}
+                  or <button type="button" className="linklike" onClick={tryAnotherTake}>try another take</button>.
+                </span>
+              )}
             </div>
           </DnaPreview>
         </div>

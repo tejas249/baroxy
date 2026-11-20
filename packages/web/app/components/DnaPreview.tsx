@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { DownloadSimple } from "@phosphor-icons/react";
+import { DownloadSimple, FileZip, Copy, Check, Moon, Sun } from "@phosphor-icons/react";
+import { track } from "@vercel/analytics";
 import type { DesignDNA } from "@baroxy/core";
 import { DesignSample } from "./DesignSample";
+import { buildZip, deriveAlternateColors, exportFiles, toAgentRules, toFigmaTokens, toShadcnTheme } from "../../lib/exports";
 
 export interface GenerateResult {
   dna: DesignDNA;
@@ -12,8 +14,8 @@ export interface GenerateResult {
   tailwind: string;
 }
 
-export function download(filename: string, content: string) {
-  const blob = new Blob([content], { type: "text/plain" });
+export function download(filename: string, content: string | Uint8Array, type = "text/plain") {
+  const blob = new Blob([content as BlobPart], { type });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -47,6 +49,10 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
     { label: "Warning", value: colors.warning },
     { label: "Danger", value: colors.danger },
   ];
+  const [altCanvas, setAltCanvas] = useState(false);
+  const [copiedRules, setCopiedRules] = useState(false);
+  const sampleColors = altCanvas ? deriveAlternateColors(colors) : colors;
+  const otherMode = colors.mode === "light" ? "dark" : "light";
   const fontLinks = Array.from(new Set([dna.typography.heading.googleFontUrl, dna.typography.body.googleFontUrl]));
 
   return (
@@ -65,10 +71,18 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
         <p className="preview-why">{dna.rationale}</p>
       </div>
 
+      <div className="canvas-toggle" role="group" aria-label="Preview canvas">
+        <button type="button" aria-pressed={!altCanvas} onClick={() => setAltCanvas(false)}>
+          {colors.mode === "light" ? <Sun size={14} weight="bold" /> : <Moon size={14} weight="bold" />} {colors.mode} (designed)
+        </button>
+        <button type="button" aria-pressed={altCanvas} onClick={() => setAltCanvas(true)}>
+          {otherMode === "light" ? <Sun size={14} weight="bold" /> : <Moon size={14} weight="bold" />} {otherMode} (derived)
+        </button>
+      </div>
       <DesignSample
         size="full"
         name={dna.brief.name}
-        colors={dna.colors}
+        colors={sampleColors}
         typography={dna.typography}
         spacing={dna.spacing}
         motion={dna.motion}
@@ -147,6 +161,15 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
       </div>
 
       <div className="downloads">
+        <button
+          className="downloads-all"
+          onClick={() => {
+            download("design-dna.zip", buildZip(exportFiles(result)), "application/zip");
+            track("download", { file: "zip" });
+          }}
+        >
+          <FileZip size={16} weight="bold" /> Download everything (.zip)
+        </button>
         <button onClick={() => download("STYLE_CONTRACT.md", result.markdown)}>
           <DownloadSimple size={16} weight="bold" /> STYLE_CONTRACT.md
         </button>
@@ -156,8 +179,40 @@ export function DnaPreview({ result, children }: { result: GenerateResult; child
         <button onClick={() => download("tailwind.tokens.js", result.tailwind)}>
           <DownloadSimple size={16} weight="bold" /> tailwind.tokens.js
         </button>
-        <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2))}>
+        <button onClick={() => download("shadcn-theme.css", toShadcnTheme(dna))}>
+          <DownloadSimple size={16} weight="bold" /> shadcn-theme.css
+        </button>
+        <button onClick={() => download("figma-tokens.json", toFigmaTokens(dna), "application/json")}>
+          <DownloadSimple size={16} weight="bold" /> figma-tokens.json
+        </button>
+        <button onClick={() => download("design-dna.json", JSON.stringify(dna, null, 2), "application/json")}>
           <DownloadSimple size={16} weight="bold" /> design-dna.json
+        </button>
+      </div>
+
+      <div className="block">
+        <BlockTitle n="07">Paste into your agent</BlockTitle>
+        <p className="preview-caption">
+          Add this to <code>CLAUDE.md</code>, <code>AGENTS.md</code> or <code>.cursorrules</code> (also in the zip as{" "}
+          <code>AGENT_RULES.md</code>) so every session follows your Design DNA.
+        </p>
+        <pre className="rules-block">{toAgentRules(dna)}</pre>
+        <button
+          type="button"
+          className="rules-copy"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(toAgentRules(dna));
+              setCopiedRules(true);
+              track("copy_rules");
+              setTimeout(() => setCopiedRules(false), 2000);
+            } catch {
+              setCopiedRules(false);
+            }
+          }}
+        >
+          {copiedRules ? <Check size={14} weight="bold" /> : <Copy size={14} weight="duotone" />}
+          {copiedRules ? "Copied!" : "Copy rules"}
         </button>
       </div>
 
